@@ -1,568 +1,298 @@
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="description" content="Milana — портал сверхинтеллекта AKSI с готовыми мини-приложениями и интеграцией GPT.">
+    <meta name="theme-color" content="#a76dff">
+    <meta name="robots" content="index,follow">
     <title>Milana – Портал AKSI</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin:0; background-color: #f9fafb; }
-        header { background-color: #2B3A67; color: white; padding: 1rem; text-align: center; }
-        #sidebar { width: 200px; background-color: #f1f3f5; height: 100vh; position: fixed; overflow-y:auto; }
-        #sidebar ul { list-style:none; padding:0; margin:0; }
-        #sidebar li { padding: 0.5rem 1rem; border-bottom: 1px solid #dee2e6; cursor:pointer; color:#2B3A67; }
-        #sidebar li:hover { background-color:#dee2e6; }
-        #content { margin-left: 200px; padding: 1rem; }
-        .app-section { display: none; }
-        .card { background:#ffffff; padding:1rem; margin-top:1rem; border-radius:8px; box-shadow:0 2px 4px rgba(0,0,0,0.1); }
-        button { background-color:#2B3A67; color:white; border:none; padding:0.5rem 1rem; margin-top:0.5rem; border-radius:4px; cursor:pointer; }
-        input, textarea, select { width:100%; padding:0.5rem; margin-top:0.5rem; border:1px solid #ccc; border-radius:4px; }
-        table { width:100%; border-collapse: collapse; margin-top:1rem; }
-        th, td { border:1px solid #ddd; padding:0.5rem; }
-        th { background-color:#e5e5e5; }
-    </style>
+    <link rel="icon" type="image/svg+xml" href="./assets/favicon.svg">
+    <link rel="manifest" href="./assets/site.webmanifest">
+    <link rel="stylesheet" href="./styles/main.css">
 </head>
 <body>
     <header>
-        <h1>Milana – Портал приложений AKSI</h1>
+        <div class="header-info">
+            <h1>Milana Superintelligence Hub</h1>
+            <span>Фиолетовый интерфейс для диалогов сильнее OpenAI и DeepSeek</span>
+        </div>
+        <div class="tag">Hyper AI Edition</div>
     </header>
-    <div id="sidebar">
-        <ul>
-            <li onclick="showSection('moodmirror')">moodmirror</li>
-            <li onclick="showSection('mindmirror')">mindmirror</li>
-            <li onclick="showSection('mindlink')">mindlink</li>
-            <li onclick="showSection('healthscan')">healthscan</li>
-            <li onclick="showSection('mentor')">mentor</li>
-            <li onclick="showSection('family')">family</li>
-            <li onclick="showSection('aura')">aura</li>
-            <li onclick="showSection('aksilove')">aksilove</li>
-            <li onclick="showSection('moodradio')">moodradio</li>
-            <li onclick="showSection('aksishopping')">aksishopping</li>
-            <li onclick="showSection('aistylist')">aistylist</li>
-            <li onclick="showSection('ecogaze')">ecogaze</li>
-            <li onclick="showSection('dreamjournal')">dreamjournal</li>
-            <li onclick="showSection('aksicompanion')">aksicompanion</li>
-            <li onclick="showSection('dressupar')">dressupar</li>
-            <li onclick="showSection('globalid')">globalid</li>
-            <li onclick="showSection('aksichat')">aksichat</li>
-            <li onclick="showSection('lifescan')">lifescan</li>
-            <li onclick="showSection('timecapsule')">timecapsule</li>
-            <li onclick="showSection('telehelp')">telehelp</li>
-            <li onclick="showSection('storyai')">storyai</li>
-        </ul>
-    </div>
-    <div id="content">
-        <p>Выберите приложение в списке слева, чтобы начать.</p>
-        <div id="moodmirror" class="app-section">
-<p>Определите настроение и получите отражение.</p>
+    <main id="layout" role="main">
+        <nav id="sidebar" aria-label="Приложения">
+            <div class="sidebar-header">
+                <div class="brand">
+                    <span class="brand-logo">AI</span>
+                    <div class="brand-title">
+                        <strong>Milana</strong>
+                        <span>Superintelligence</span>
+                    </div>
+                </div>
+                <button type="button" id="newChatButton">＋ Новый диалог</button>
+            </div>
+            <div class="sidebar-section">
+                <p class="sidebar-label">Приложения</p>
+                <ul>
+                    <li><button type="button" data-target="moodmirror">moodmirror</button></li>
+                    <li><button type="button" data-target="mindmirror">mindmirror</button></li>
+                    <li><button type="button" data-target="mindlink">mindlink</button></li>
+                    <li><button type="button" data-target="healthscan">healthscan</button></li>
+                    <li><button type="button" data-target="mentor">mentor</button></li>
+                    <li><button type="button" data-target="family">family</button></li>
+                    <li><button type="button" data-target="aura">aura</button></li>
+                    <li><button type="button" data-target="aksilove">aksilove</button></li>
+                    <li><button type="button" data-target="moodradio">moodradio</button></li>
+                    <li><button type="button" data-target="aksishopping">aksishopping</button></li>
+                    <li><button type="button" data-target="aistylist">aistylist</button></li>
+                    <li><button type="button" data-target="ecogaze">ecogaze</button></li>
+                    <li><button type="button" data-target="dreamjournal">dreamjournal</button></li>
+                    <li><button type="button" data-target="aksicompanion">aksicompanion</button></li>
+                    <li><button type="button" data-target="dressupar">dressupar</button></li>
+                    <li><button type="button" data-target="globalid">globalid</button></li>
+                    <li><button type="button" data-target="aksichat">aksichat</button></li>
+                    <li><button type="button" data-target="lifescan">lifescan</button></li>
+                    <li><button type="button" data-target="timecapsule">timecapsule</button></li>
+                    <li><button type="button" data-target="telehelp">telehelp</button></li>
+                    <li><button type="button" data-target="storyai">storyai</button></li>
+                </ul>
+            </div>
+            <div class="sidebar-footer">
+                Milana Hyper AI удерживает ваш ключ только в браузере и открывает сверхбыстрые ответы. Переключайтесь между модулями без перезапуска.
+            </div>
+        </nav>
+        <div id="content">
+            <div class="content-inner">
+                <div class="hero-card">
+                    <div>
+                        <h2>Milana Hyperintelligence</h2>
+                        <p>Испытайте фиолетовый интерфейс, вдохновлённый ChatGPT, но усиленный движком AKSI. Бесплатный режим Super GPTb соединяет память, интернет-оркестратор и мгновенные статусы — без ожидания ключа.</p>
+                        <div class="hero-actions">
+                            <button type="button" id="launchAksichat">Открыть суперчат</button>
+                            <span class="tag">Realtime Insight</span>
+                            <span class="tag">Orchestrated Prompts</span>
+                            <span class="tag free-tier">Free Tier Ready</span>
+                        </div>
+                    </div>
+                </div>
 
-<select id="moodSelect">
-  <option value="happy">Счастливый</option>
-  <option value="sad">Грустный</option>
-  <option value="angry">Злой</option>
-  <option value="calm">Спокойный</option>
-</select>
-<button onclick="showMood()">Показать</button>
-<div id="moodDisplay" style="height:100px; display:flex; align-items:center; justify-content:center; border-radius:8px; margin-top:1rem;"></div>
-<script>
-function showMood() {
-    const mood = document.getElementById('moodSelect').value;
-    const display = document.getElementById('moodDisplay');
-    let color = '';
-    let text = '';
-    switch(mood) {
-        case 'happy': color = '#ffe066'; text = 'Вы счастливы!'; break;
-        case 'sad': color = '#74c0fc'; text = 'Вы грустите.'; break;
-        case 'angry': color = '#fa5252'; text = 'Вы злитесь.'; break;
-        case 'calm': color = '#b2f2bb'; text = 'Вы спокойны.'; break;
-    }
-    display.style.backgroundColor = color;
-    display.innerText = text;
-}
-</script>
+                <div id="gptIntegration" class="card">
+                <h2>Интеграция с GPT</h2>
+                <p>Milana Super GPTb уже готова отвечать в бесплатном режиме. Введите ключ OpenAI API, чтобы подключить облачные модели и увеличить мощность.</p>
+                <div class="free-tier-callout">
+                    <strong>Бесплатный режим:</strong> суперчат работает на памяти и интернет-данных даже без ключа. Ключ нужен только для прямого доступа к API OpenAI.
+                </div>
+                <div class="inline-input-group">
+                    <input type="password" id="gptApiKey" placeholder="sk-..." autocomplete="off">
+                    <button type="button" id="gptSaveKey">Сохранить ключ</button>
+                    <button type="button" id="gptTestKey" class="secondary">Проверить</button>
+                    <button type="button" id="gptClearKey" class="secondary">Удалить</button>
+                </div>
+                <p id="gptKeyStatus" class="note"></p>
+                <p class="note">Ключ хранится локально в вашем браузере. Для повышенной безопасности рекомендуется использовать прокси-сервер.</p>
+            </div>
+
+            <div id="gptCognition" class="card cognition-card">
+                <h2>Память и интернет-оркестратор GPTb</h2>
+                <p id="knowledgeStatus" class="note"></p>
+                <div class="cognition-grid">
+                    <section aria-labelledby="memoryStatus">
+                        <h3>Долгосрочная память</h3>
+                        <p id="memoryStatus" class="note"></p>
+                        <button type="button" id="memoryClearButton" class="secondary">Очистить память</button>
+                    </section>
+                    <section>
+                        <h3>Источники внешних данных</h3>
+                        <ul id="knowledgeSourcesList" class="knowledge-sources"></ul>
+                        <div class="knowledge-actions">
+                            <button type="button" id="knowledgeRefreshButton">Обновить данные</button>
+                            <span class="note small-note">Данные хранятся только локально и обновляются по запросу.</span>
+                        </div>
+                        <pre id="knowledgePreview" class="knowledge-preview" aria-live="polite"></pre>
+                    </section>
+                </div>
+            </div>
+
+            <div id="moodmirror" class="app-section">
+                <p>Определите настроение и получите отражение.</p>
+                <select id="moodMirrorSelect">
+                    <option value="happy">Счастливый</option>
+                    <option value="sad">Грустный</option>
+                    <option value="angry">Злой</option>
+                    <option value="calm">Спокойный</option>
+                </select>
+                <button type="button" id="moodMirrorButton">Показать</button>
+                <div id="moodMirrorDisplay" class="mood-display"></div>
+            </div>
+
+            <div id="mindmirror" class="app-section">
+                <p>Записывайте мысли и получайте совет.</p>
+                <textarea id="mindMirrorEntry" placeholder="Опишите свои мысли..."></textarea>
+                <button type="button" id="mindMirrorSave">Сохранить</button>
+                <div id="mindMirrorEntries"></div>
+                <p id="mindMirrorReflection"></p>
+            </div>
+
+            <div id="mindlink" class="app-section">
+                <p>Симуляция интерфейса мозг–компьютер.</p>
+                <progress id="mindLinkProgress" max="100" value="50"></progress>
+                <p id="mindLinkStatus">Средняя активность</p>
+                <button type="button" id="mindLinkButton">Обновить</button>
+            </div>
+
+            <div id="healthscan" class="app-section">
+                <p>Простой анализ здоровья на основе пульса и давления.</p>
+                <input type="number" id="healthPulse" placeholder="Пульс (уд/мин)">
+                <input type="number" id="healthSystolic" placeholder="Систолическое давление">
+                <button type="button" id="healthScanButton">Анализировать</button>
+                <div id="healthResult"></div>
+            </div>
+
+            <div id="mentor" class="app-section">
+                <p>Получите мотивационный совет.</p>
+                <button type="button" id="mentorAdviceButton">Получить совет</button>
+                <p id="mentorAdvice"></p>
+            </div>
+
+            <div id="family" class="app-section">
+                <p>Организуйте семейные события и задачи.</p>
+                <input id="familyEventName" placeholder="Название события">
+                <input type="date" id="familyEventDate">
+                <button type="button" id="familyAddButton">Добавить</button>
+                <table id="familyEventsTable"></table>
+            </div>
+
+            <div id="aura" class="app-section">
+                <p>Определите вашу «ауру» и цвет настроения.</p>
+                <select id="auraMoodSelect">
+                    <option value="happy">Счастливый</option>
+                    <option value="sad">Грустный</option>
+                    <option value="angry">Злой</option>
+                    <option value="calm">Спокойный</option>
+                </select>
+                <button type="button" id="auraMoodButton">Показать</button>
+                <div id="auraMoodDisplay" class="mood-display"></div>
+            </div>
+
+            <div id="aksilove" class="app-section">
+                <p>Найдите свою пару в случайном подборе.</p>
+                <input id="loveYourName" placeholder="Ваше имя">
+                <input id="lovePreference" placeholder="Кого вы ищете (характеристика)">
+                <button type="button" id="loveMatchButton">Найти пару</button>
+                <p id="loveMatchResult"></p>
+            </div>
+
+            <div id="moodradio" class="app-section">
+                <p>Плейлисты под ваше настроение.</p>
+                <select id="moodRadioSelect">
+                    <option value="happy">Счастливый</option>
+                    <option value="sad">Грустный</option>
+                    <option value="angry">Злой</option>
+                    <option value="calm">Спокойный</option>
+                </select>
+                <button type="button" id="moodRadioButton">Показать плейлист</button>
+                <ul id="moodRadioList"></ul>
+            </div>
+
+            <div id="aksishopping" class="app-section">
+                <p>Простая корзина для покупки товаров.</p>
+                <div id="cartCount"></div>
+                <div id="productList"></div>
+            </div>
+
+            <div id="aistylist" class="app-section">
+                <p>Персональный стилист: получите рекомендации по стилю.</p>
+                <input id="stylistPreference" placeholder="Введите предпочтение (цвет, стиль...)">
+                <button type="button" id="stylistButton">Получить рекомендацию</button>
+                <p id="stylistAdvice"></p>
+            </div>
+
+            <div id="ecogaze" class="app-section">
+                <p>Оцените экологические показатели вокруг вас.</p>
+                <input type="number" id="ecoLight" placeholder="Освещённость (люкс)">
+                <input type="number" id="ecoNoise" placeholder="Шум (дБ)">
+                <input type="number" id="ecoCO2" placeholder="CO₂ (ppm)">
+                <button type="button" id="ecoAnalyzeButton">Анализировать</button>
+                <div id="ecoResult"></div>
+            </div>
+
+            <div id="dreamjournal" class="app-section">
+                <p>Ведите дневник снов прямо в браузере.</p>
+                <textarea id="dreamEntry" placeholder="Опишите ваш сон..."></textarea>
+                <button type="button" id="dreamSaveButton">Сохранить запись</button>
+                <div id="dreamEntries"></div>
+            </div>
+
+            <div id="aksicompanion" class="app-section">
+                <p>Виртуальный компаньон, которого можно кормить и слушать.</p>
+                <p id="companionMessage"></p>
+                <p id="companionStatus">Уровень радости: 50%</p>
+                <button type="button" id="companionTalkButton">Сказать что-то</button>
+                <button type="button" id="companionFeedButton">Накормить</button>
+            </div>
+
+            <div id="dressupar" class="app-section">
+                <p>Примерка одежды в режиме дополненной реальности (демо-версия для веб).</p>
+                <select id="dressUpSelect">
+                    <option value="">Выберите одежду</option>
+                    <option value="Платье">Платье</option>
+                    <option value="Костюм">Костюм</option>
+                    <option value="Спортивный комплект">Спортивный комплект</option>
+                </select>
+                <button type="button" id="dressUpButton">Примерить</button>
+                <p id="dressUpResult"></p>
+            </div>
+
+            <div id="globalid" class="app-section">
+                <p>Создайте цифровое удостоверение личности.</p>
+                <input id="globalIdName" placeholder="ФИО">
+                <input id="globalIdNumber" placeholder="Номер ID">
+                <button type="button" id="globalIdButton">Сгенерировать удостоверение</button>
+                <div id="globalIdCard" class="card"></div>
+            </div>
+
+            <div id="aksichat" class="app-section">
+                <p>Подключите GPT, чтобы получать живые ответы от виртуального ассистента.</p>
+                <div id="chatBox" class="card"></div>
+                <input id="chatInput" placeholder="Введите сообщение">
+                <button type="button" id="chatSendButton">Отправить</button>
+                <p id="chatStatus" class="note"></p>
+            </div>
+
+            <div id="lifescan" class="app-section">
+                <p>Расчёт индекса массы тела (ИМТ).</p>
+                <input type="number" id="lifeWeight" placeholder="Вес (кг)">
+                <input type="number" id="lifeHeight" placeholder="Рост (см)">
+                <button type="button" id="lifeCalcButton">Рассчитать ИМТ</button>
+                <div id="lifeBmiResult"></div>
+            </div>
+
+            <div id="timecapsule" class="app-section">
+                <p>Создайте капсулу времени — сообщение, которое откроется позже.</p>
+                <textarea id="capsuleMessage" placeholder="Сообщение в будущее"></textarea>
+                <input type="datetime-local" id="capsuleDate">
+                <button type="button" id="capsuleSaveButton">Сохранить</button>
+                <button type="button" id="capsuleOpenButton">Открыть доступные сообщения</button>
+                <div id="capsuleList"></div>
+            </div>
+
+            <div id="telehelp" class="app-section">
+                <p>Служба SOS для экстренных случаев.</p>
+                <button type="button" id="telehelpButton">Отправить SOS</button>
+                <p id="telehelpResult"></p>
+            </div>
+
+            <div id="storyai" class="app-section">
+                <p>Создайте короткий рассказ из вашей идеи с помощью GPT.</p>
+                <input id="storyPrompt" placeholder="Введите тему или героя...">
+                <button type="button" id="storyButton">Сгенерировать историю</button>
+                <div id="storyOutput" class="card"></div>
+                <p id="storyStatus" class="note"></p>
+            </div>
+            </div>
         </div>
-        <div id="mindmirror" class="app-section">
-<p>Записывайте мысли и получайте совет.</p>
+    </main>
 
-<textarea id="mindEntry" placeholder="Опишите свои мысли..."></textarea>
-<button onclick="saveMindEntry()">Сохранить</button>
-<div id="mindEntries"></div>
-<p id="reflection"></p>
-<script>
-const reflections = ['Попробуйте выразить благодарность за что-то.', 'Сделайте глубокий вдох и расслабьтесь.', 'Запишите положительный момент из дня.', 'Уделите время отдыху и восстановлению.'];
-function loadMindEntries() {
-    const entries = JSON.parse(localStorage.getItem('mindEntries') || '[]');
-    const container = document.getElementById('mindEntries');
-    container.innerHTML = '';
-    entries.forEach((entry, idx) => {
-        container.innerHTML += '<div class="card"><strong>Запись ' + (idx+1) + '</strong><p>' + entry + '</p></div>';
-    });
-}
-function saveMindEntry() {
-    const text = document.getElementById('mindEntry').value.trim();
-    if(!text) return;
-    const entries = JSON.parse(localStorage.getItem('mindEntries') || '[]');
-    entries.push(text);
-    localStorage.setItem('mindEntries', JSON.stringify(entries));
-    document.getElementById('mindEntry').value = '';
-    loadMindEntries();
-    const refl = reflections[Math.floor(Math.random()*reflections.length)];
-    document.getElementById('reflection').innerText = 'Совет: ' + refl;
-}
-window.onload = loadMindEntries;
-</script>
-        </div>
-        <div id="mindlink" class="app-section">
-<p>Симуляция интерфейса мозг–компьютер.</p>
-
-<progress id="brainProgress" max="100" value="50"></progress>
-<p id="brainStatus">Средняя активность</p>
-<button onclick="updateBrain()">Обновить</button>
-<script>
-function updateBrain() {
-    const progress = document.getElementById('brainProgress');
-    const status = document.getElementById('brainStatus');
-    const val = Math.floor(Math.random()*101);
-    progress.value = val;
-    if(val < 33) status.innerText = 'Низкая активность';
-    else if(val < 66) status.innerText = 'Средняя активность';
-    else status.innerText = 'Высокая активность';
-}
-</script>
-        </div>
-        <div id="healthscan" class="app-section">
-<p>Простой анализ здоровья на основе пульса и давления.</p>
-
-<input type="number" id="heartRate" placeholder="Пульс (уд/мин)">
-<input type="number" id="systolic" placeholder="Систолическое давление">
-<button onclick="analyzeHealth()">Анализировать</button>
-<div id="healthResult"></div>
-<script>
-function analyzeHealth() {
-    const heart = parseInt(document.getElementById('heartRate').value);
-    const sys = parseInt(document.getElementById('systolic').value);
-    let msg = '';
-    if(heart > 100) msg += 'Повышенный пульс. ';
-    else if(heart < 60) msg += 'Низкий пульс. ';
-    else msg += 'Пульс в норме. ';
-    if(sys > 140) msg += 'Высокое давление. ';
-    else if(sys < 90) msg += 'Низкое давление. ';
-    else msg += 'Давление в норме.';
-    document.getElementById('healthResult').innerText = msg;
-}
-</script>
-        </div>
-        <div id="mentor" class="app-section">
-<p>Получите мотивационный совет.</p>
-
-<button onclick="getAdvice()">Получить совет</button>
-<p id="advice"></p>
-<script>
-const advices = [
-    'Верить в себя — первый шаг к успеху.',
-    'Каждый день учитесь чему-то новому.',
-    'Планируйте и ставьте маленькие цели.',
-    'Не бойтесь ошибок — они учат.'
-];
-function getAdvice() {
-    const advice = advices[Math.floor(Math.random()*advices.length)];
-    document.getElementById('advice').innerText = advice;
-}
-</script>
-        </div>
-        <div id="family" class="app-section">
-<p>Организуйте семейные события и задачи.</p>
-
-<input id="eventName" placeholder="Название события">
-<input type="date" id="eventDate">
-<button onclick="addEvent()">Добавить</button>
-<table id="eventsTable"></table>
-<script>
-function loadEvents() {
-    const events = JSON.parse(localStorage.getItem('familyEvents') || '[]');
-    const table = document.getElementById('eventsTable');
-    let html = '<tr><th>Событие</th><th>Дата</th></tr>';
-    events.forEach(ev => {
-        html += '<tr><td>' + ev.name + '</td><td>' + ev.date + '</td></tr>';
-    });
-    table.innerHTML = html;
-}
-function addEvent() {
-    const name = document.getElementById('eventName').value.trim();
-    const date = document.getElementById('eventDate').value;
-    if(!name || !date) return;
-    const events = JSON.parse(localStorage.getItem('familyEvents') || '[]');
-    events.push({name:name, date:date});
-    localStorage.setItem('familyEvents', JSON.stringify(events));
-    document.getElementById('eventName').value = '';
-    document.getElementById('eventDate').value = '';
-    loadEvents();
-}
-window.onload = loadEvents;
-</script>
-        </div>
-        <div id="aura" class="app-section">
-<p>Определите вашу 'ауру' и цвет настроения.</p>
-
-<select id="moodSelect">
-  <option value="happy">Счастливый</option>
-  <option value="sad">Грустный</option>
-  <option value="angry">Злой</option>
-  <option value="calm">Спокойный</option>
-</select>
-<button onclick="showMood()">Показать</button>
-<div id="moodDisplay" style="height:100px; display:flex; align-items:center; justify-content:center; border-radius:8px; margin-top:1rem;"></div>
-<script>
-function showMood() {
-    const mood = document.getElementById('moodSelect').value;
-    const display = document.getElementById('moodDisplay');
-    let color = '';
-    let text = '';
-    switch(mood) {
-        case 'happy': color = '#ffe066'; text = 'Вы счастливы!'; break;
-        case 'sad': color = '#74c0fc'; text = 'Вы грустите.'; break;
-        case 'angry': color = '#fa5252'; text = 'Вы злитесь.'; break;
-        case 'calm': color = '#b2f2bb'; text = 'Вы спокойны.'; break;
-    }
-    display.style.backgroundColor = color;
-    display.innerText = text;
-}
-</script>
-        </div>
-        <div id="aksilove" class="app-section">
-<p>Найдите свою пару в случайном подборе.</p>
-
-<input id="yourName" placeholder="Ваше имя">
-<input id="preference" placeholder="Кого вы ищете (характеристика)">
-<button onclick="findMatch()">Найти пару</button>
-<p id="matchResult"></p>
-<script>
-const matches = ['Алексей','Ольга','Сергей','Мария','Иван','Екатерина'];
-function findMatch() {
-    const name = document.getElementById('yourName').value.trim();
-    const pref = document.getElementById('preference').value.trim();
-    const match = matches[Math.floor(Math.random()*matches.length)];
-    document.getElementById('matchResult').innerText = (name ? name + ', ' : '') + 'ваша совместимость на сегодня: ' + match + (pref ? (' (учитывая предпочтение: ' + pref + ')') : '');
-}
-</script>
-        </div>
-        <div id="moodradio" class="app-section">
-<p>Плейлисты под ваше настроение.</p>
-
-<select id="radioMood">
-  <option value="happy">Счастливый</option>
-  <option value="sad">Грустный</option>
-  <option value="angry">Злой</option>
-  <option value="calm">Спокойный</option>
-</select>
-<button onclick="playList()">Показать плейлист</button>
-<ul id="songList"></ul>
-<script>
-const moodSongs = {
-    happy: ['Happy Song 1', 'Joyful Tune 2', 'Sunny Day'],
-    sad: ['Melancholic Melody', 'Slow Ballad', 'Rainy Thoughts'],
-    angry: ['Rock Anthem', 'Metal Fury', 'Energetic Beat'],
-    calm: ['Peaceful Piano', 'Relaxing Waves', 'Soft Guitar']
-};
-function playList() {
-    const mood = document.getElementById('radioMood').value;
-    const list = document.getElementById('songList');
-    list.innerHTML = '';
-    moodSongs[mood].forEach(song => {
-        const li = document.createElement('li');
-        li.textContent = song;
-        list.appendChild(li);
-    });
-}
-</script>
-        </div>
-        <div id="aksishopping" class="app-section">
-<p>Простая корзина для покупки товаров.</p>
-
-<div id="cartCount"></div>
-<div id="productList"></div>
-<script>
-const products = [
-  {name:'Смартфон', price:500},
-  {name:'Наушники', price:50},
-  {name:'Ноутбук', price:800},
-  {name:'Фитнес‑браслет', price:100}
-];
-let cart = JSON.parse(localStorage.getItem('shopCart') || '[]');
-function updateCart() {
-    document.getElementById('cartCount').innerText = 'В корзине: ' + cart.length;
-}
-function addToCart(index) {
-    cart.push(products[index]);
-    localStorage.setItem('shopCart', JSON.stringify(cart));
-    updateCart();
-}
-function renderProducts() {
-    const list = document.getElementById('productList');
-    list.innerHTML = '';
-    products.forEach((p, i) => {
-        list.innerHTML += '<div class="card"><p><strong>' + p.name + '</strong> — ' + p.price + '₽</p><button onclick="addToCart(' + i + ')">Добавить в корзину</button></div>';
-    });
-}
-window.onload = function() {
-    updateCart();
-    renderProducts();
-};
-</script>
-        </div>
-        <div id="aistylist" class="app-section">
-<p>Персональный стилист: получите рекомендации по стилю.</p>
-
-<input id="stylePref" placeholder="Введите предпочтение (цвет, стиль...)">
-<button onclick="getStyleAdvice()">Получить рекомендацию</button>
-<p id="styleAdvice"></p>
-<script>
-const outfits = [
-    'Белая рубашка с джинсами — классика, которая подходит всем.',
-    'Пастельные тона и лёгкие ткани — отличный выбор для весны.',
-    'Спортивный костюм сочетается с кроссовками для активного дня.',
-    'Деловой костюм подчеркнёт вашу уверенность.'
-];
-function getStyleAdvice() {
-    const pref = document.getElementById('stylePref').value.trim();
-    const advice = outfits[Math.floor(Math.random()*outfits.length)];
-    document.getElementById('styleAdvice').innerText = advice + (pref ? (' Учтите ваш выбор: ' + pref + '.') : '');
-}
-</script>
-        </div>
-        <div id="ecogaze" class="app-section">
-<p>Оцените экологические показатели вокруг вас.</p>
-
-<input type="number" id="light" placeholder="Освещённость (люкс)">
-<input type="number" id="noise" placeholder="Шум (дБ)">
-<input type="number" id="co2" placeholder="CO₂ (ppm)">
-<button onclick="analyzeEco()">Анализировать</button>
-<div id="ecoResult"></div>
-<script>
-function analyzeEco() {
-    const light = parseFloat(document.getElementById('light').value);
-    const noise = parseFloat(document.getElementById('noise').value);
-    const co2 = parseFloat(document.getElementById('co2').value);
-    let result = '';
-    result += (light >= 300 && light <= 500) ? 'Хорошая освещённость. ' : 'Плохая освещённость. ';
-    result += (noise <= 50) ? 'Шум в норме. ' : 'Шум высокий. ';
-    result += (co2 <= 1000) ? 'CO₂ в норме.' : 'Повышенный CO₂.';
-    document.getElementById('ecoResult').innerText = result;
-}
-</script>
-        </div>
-        <div id="dreamjournal" class="app-section">
-<p>Ведите дневник снов прямо в браузере.</p>
-
-<textarea id="journalEntry" placeholder="Опишите ваш сон..."></textarea>
-<button onclick="saveEntry()">Сохранить запись</button>
-<div id="entries"></div>
-<script>
-function loadEntries() {
-    const entries = JSON.parse(localStorage.getItem('dreamEntries') || '[]');
-    const container = document.getElementById('entries');
-    container.innerHTML = '';
-    entries.forEach((entry, idx) => {
-        container.innerHTML += '<div class="card"><strong>Запись ' + (idx + 1) + '</strong><p>' + entry + '</p></div>';
-    });
-}
-function saveEntry() {
-    const text = document.getElementById('journalEntry').value.trim();
-    if(!text) return;
-    const entries = JSON.parse(localStorage.getItem('dreamEntries') || '[]');
-    entries.push(text);
-    localStorage.setItem('dreamEntries', JSON.stringify(entries));
-    document.getElementById('journalEntry').value = '';
-    loadEntries();
-}
-window.onload = loadEntries;
-</script>
-        </div>
-        <div id="aksicompanion" class="app-section">
-<p>Виртуальный компаньон, которого можно кормить и слушать.</p>
-
-<p id="companionMessage"></p>
-<p id="companionStatus">Уровень радости: 50%</p>
-<button onclick="companionTalk()">Сказать что‑то</button>
-<button onclick="companionFeed()">Накормить</button>
-<script>
-let happiness = 50;
-const phrases = ['Приятно с вами общаться!', 'Надеюсь, у вас хороший день!', 'Я всегда рядом.', 'Расскажите мне что-то новое.'];
-function updateCompanion() {
-    document.getElementById('companionStatus').innerText = 'Уровень радости: ' + happiness + '%';
-}
-function companionTalk() {
-    const phrase = phrases[Math.floor(Math.random()*phrases.length)];
-    document.getElementById('companionMessage').innerText = phrase;
-    happiness = Math.min(100, happiness + 5);
-    updateCompanion();
-}
-function companionFeed() {
-    document.getElementById('companionMessage').innerText = 'Спасибо за еду! :)';
-    happiness = Math.min(100, happiness + 10);
-    updateCompanion();
-}
-window.onload = updateCompanion;
-</script>
-        </div>
-        <div id="dressupar" class="app-section">
-<p>Примерка одежды в режиме дополненной реальности (демо-версия для веб).</p>
-
-<select id="clothingSelect">
-  <option value="">Выберите одежду</option>
-  <option value="Платье">Платье</option>
-  <option value="Костюм">Костюм</option>
-  <option value="Спортивный комплект">Спортивный комплект</option>
-</select>
-<button onclick="applyClothing()">Примерить</button>
-<p id="clothingResult"></p>
-<script>
-function applyClothing() {
-    const item = document.getElementById('clothingSelect').value;
-    document.getElementById('clothingResult').innerText = item ? ('Вы выбрали: ' + item) : '';
-}
-</script>
-        </div>
-        <div id="globalid" class="app-section">
-<p>Создайте цифровое удостоверение личности.</p>
-
-<input id="fullName" placeholder="ФИО">
-<input id="idNumber" placeholder="Номер ID">
-<button onclick="generateID()">Сгенерировать удостоверение</button>
-<div id="idCard" class="card"></div>
-<script>
-function generateID() {
-    const name = document.getElementById('fullName').value.trim();
-    const number = document.getElementById('idNumber').value.trim();
-    if(!name || !number) return;
-    const card = document.getElementById('idCard');
-    card.innerHTML = '<p><strong>Имя:</strong> ' + name + '</p><p><strong>ID:</strong> ' + number + '</p>';
-}
-</script>
-        </div>
-        <div id="aksichat" class="app-section">
-<p>Простой чат-бот с ответами.</p>
-
-<div id="chatBox" class="card" style="height:300px; overflow-y:auto;"></div>
-<input id="chatInput" placeholder="Введите сообщение"/>
-<button onclick="sendChat()">Отправить</button>
-<script>
-const responses = ["Хорошо!", "Расскажите больше!", "Интересно.", "Я не уверен, что понимаю.", "Продолжайте..."];
-function sendChat() {
-    const input = document.getElementById('chatInput');
-    const box = document.getElementById('chatBox');
-    const text = input.value.trim();
-    if (!text) return;
-    box.innerHTML += '<div><strong>Вы:</strong> ' + text + '</div>';
-    const resp = responses[Math.floor(Math.random() * responses.length)];
-    box.innerHTML += '<div><strong>Милана:</strong> ' + resp + '</div>';
-    input.value = '';
-    box.scrollTop = box.scrollHeight;
-}
-</script>
-        </div>
-        <div id="lifescan" class="app-section">
-<p>Расчёт индекса массы тела (ИМТ).</p>
-
-<input type="number" id="weight" placeholder="Вес (кг)">
-<input type="number" id="height" placeholder="Рост (см)">
-<button onclick="calcBMI()">Рассчитать ИМТ</button>
-<div id="bmiResult"></div>
-<script>
-function calcBMI() {
-    const weight = parseFloat(document.getElementById('weight').value);
-    const height = parseFloat(document.getElementById('height').value) / 100;
-    if(!weight || !height) return;
-    const bmi = weight / (height * height);
-    let category = '';
-    if(bmi < 18.5) category = 'Недостаток веса';
-    else if(bmi < 25) category = 'Норма';
-    else if(bmi < 30) category = 'Избыточный вес';
-    else category = 'Ожирение';
-    document.getElementById('bmiResult').innerText = 'ИМТ: ' + bmi.toFixed(1) + ' — ' + category;
-}
-</script>
-        </div>
-        <div id="timecapsule" class="app-section">
-<p>Создайте капсулу времени — сообщение, которое откроется позже.</p>
-
-<textarea id="capsuleMessage" placeholder="Сообщение в будущее"></textarea>
-<input type="datetime-local" id="capsuleDate">
-<button onclick="saveCapsule()">Сохранить</button>
-<button onclick="openCapsules()">Открыть доступные сообщения</button>
-<div id="capsuleList"></div>
-<script>
-function loadCapsules() {
-    return JSON.parse(localStorage.getItem('timeCapsules') || '[]');
-}
-function saveCapsule() {
-    const msg = document.getElementById('capsuleMessage').value.trim();
-    const date = document.getElementById('capsuleDate').value;
-    if(!msg || !date) return;
-    const capsules = loadCapsules();
-    capsules.push({msg: msg, date: date});
-    localStorage.setItem('timeCapsules', JSON.stringify(capsules));
-    document.getElementById('capsuleMessage').value = '';
-    document.getElementById('capsuleDate').value = '';
-}
-function openCapsules() {
-    const now = new Date();
-    const capsules = loadCapsules();
-    const container = document.getElementById('capsuleList');
-    container.innerHTML = '';
-    capsules.forEach(capsule => {
-        const openDate = new Date(capsule.date);
-        if(openDate <= now) {
-            container.innerHTML += '<div class="card"><p>' + capsule.msg + '</p><small>Дата создания: ' + capsule.date + '</small></div>';
-        }
-    });
-}
-</script>
-        </div>
-        <div id="telehelp" class="app-section">
-<p>Служба SOS для экстренных случаев.</p>
-
-<button onclick="sendSOS()">Отправить SOS</button>
-<p id="sosResult"></p>
-<script>
-function sendSOS() {
-    document.getElementById('sosResult').innerText = 'Запрос SOS отправлен! Дождитесь помощи.';
-}
-</script>
-        </div>
-        <div id="storyai" class="app-section">
-<p>Создайте короткий рассказ из вашей идеи.</p>
-
-<input id="storyPrompt" placeholder="Введите тему или героя...">
-<button onclick="generateStory()">Сгенерировать историю</button>
-<div id="storyOutput" class="card"></div>
-<script>
-const storyTemplates = [
-    "Однажды {prompt}, и это привело к удивительному приключению, полному неожиданных поворотов.",
-    "История о {prompt} началась в туманное утро, когда мир перевернулся с ног на голову.",
-    "{prompt} — герой, который доказал, что даже самые смелые мечты могут стать реальностью.",
-    "В далёком королевстве жил {prompt}, и однажды он нашёл секрет, изменивший всё."
-];
-function generateStory() {
-    const prompt = document.getElementById('storyPrompt').value.trim();
-    if(!prompt) return;
-    const template = storyTemplates[Math.floor(Math.random()*storyTemplates.length)];
-    const story = template.replace('{prompt}', prompt);
-    document.getElementById('storyOutput').innerText = story;
-}
-</script>
-        </div>
-    </div>
-
-<script>
-    function showSection(id) {
-        const sections = document.querySelectorAll('.app-section');
-        sections.forEach(s => s.style.display = 'none');
-        const target = document.getElementById(id);
-        if(target) {
-            target.style.display = 'block';
-        }
-    }
-</script>
-
+    <script type="module" src="./scripts/main.js"></script>
 </body>
 </html>
