@@ -25,6 +25,7 @@
             <a href="#vision" data-i18n="nav.vision"></a>
             <a href="#capabilities" data-i18n="nav.capabilities"></a>
             <a href="#timeline" data-i18n="nav.timeline"></a>
+            <a href="#console" data-i18n="nav.console"></a>
         </nav>
         <div class="language-toggle" role="group" aria-label="Выбор языка">
             <button type="button" data-lang-switch="ru" class="active">RU</button>
@@ -122,6 +123,36 @@
                     <span class="timeline-index">Ⅲ</span>
                     <p data-i18n="timeline.step3"></p>
                 </div>
+            </div>
+        </section>
+
+        <section id="console" class="section ai-console" data-tilt="1">
+            <header class="ai-header">
+                <div>
+                    <h2 data-i18n="ai.title"></h2>
+                    <p data-i18n="ai.subtitle"></p>
+                </div>
+                <p class="ai-hint" data-i18n="ai.hint"></p>
+            </header>
+            <div class="ai-layout">
+                <div class="ai-chat" data-tilt="1.2">
+                    <div class="ai-messages" data-ai-messages aria-live="polite"></div>
+                    <div class="ai-suggestions">
+                        <span class="ai-suggestions-title" data-i18n="ai.suggestions.title"></span>
+                        <div class="ai-suggestions-list" data-ai-suggestions></div>
+                    </div>
+                    <form class="ai-form" data-ai-form>
+                        <label class="sr-only" for="ai-input" data-i18n="ai.hint"></label>
+                        <input id="ai-input" name="prompt" type="text" autocomplete="off" data-i18n-placeholder="ai.input.placeholder">
+                        <button type="submit" class="ai-send" data-i18n="ai.send"></button>
+                    </form>
+                </div>
+                <aside class="ai-memory" data-tilt="0.8">
+                    <h3 data-i18n="ai.memory.title"></h3>
+                    <div class="ai-memory-body" data-ai-memory>
+                        <p data-i18n="ai.memory.empty"></p>
+                    </div>
+                </aside>
             </div>
         </section>
 
