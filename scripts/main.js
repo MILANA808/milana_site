@@ -69,11 +69,24 @@ document.addEventListener('DOMContentLoaded', () => {
         projectField: document.getElementById('gptProjectId'),
         endpointSaveButton: document.getElementById('gptSaveEndpoint'),
         endpointStatusField: document.getElementById('gptEndpointStatus'),
+        diagnosticsButton: document.getElementById('gptRunDiagnostics'),
+        diagnosticsLog: document.getElementById('gptDiagnosticsLog'),
         freeTier: freeTierEngine
     });
 
     const queryGPT = (...args) => gptIntegration.query(...args);
     const formatGptError = (error) => gptIntegration.formatError(error);
+
+    gptIntegration.ready
+        .then(() => {
+            if (gptIntegration.runDiagnostics) {
+                const shouldProbe = Boolean(gptIntegration.key || freeTierEngine);
+                if (shouldProbe) {
+                    gptIntegration.runDiagnostics().catch(() => {});
+                }
+            }
+        })
+        .catch(() => {});
 
     const knowledgeSourcesList = document.getElementById('knowledgeSourcesList');
     const knowledgePreview = document.getElementById('knowledgePreview');

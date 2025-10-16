@@ -157,6 +157,8 @@ export function createGptIntegration({
     projectField,
     endpointSaveButton,
     endpointStatusField,
+    diagnosticsButton,
+    diagnosticsLog,
     storage = typeof window !== 'undefined' ? window.localStorage : undefined,
     fetchImpl = typeof window !== 'undefined' ? window.fetch.bind(window) : undefined,
     locationHref = typeof window !== 'undefined' ? window.location?.href : undefined,
@@ -177,17 +179,52 @@ export function createGptIntegration({
     let apiBase = DEFAULT_API_BASE;
     let projectId = '';
 
+    const DIAGNOSTICS_LIMIT = 30;
+    const diagnosticsHistory = [];
+
+    if (diagnosticsLog) {
+        diagnosticsLog.dataset.state = 'info';
+    }
+
+    const updateDiagnosticsView = ({ error = false } = {}) => {
+        if (!diagnosticsLog) return;
+        diagnosticsLog.textContent = diagnosticsHistory.length
+            ? diagnosticsHistory.join('\n')
+            : 'История диагностики появится после первой проверки.';
+        diagnosticsLog.dataset.state = error ? 'error' : 'info';
+    };
+
+    const recordDiagnostic = (message, { error = false } = {}) => {
+        if (!message) {
+            updateDiagnosticsView({ error });
+            return;
+        }
+        const stamp = new Date().toLocaleTimeString('ru-RU', { hour12: false });
+        const entry = `${stamp} — ${message}`;
+        diagnosticsHistory.push(entry);
+        if (diagnosticsHistory.length > DIAGNOSTICS_LIMIT) {
+            diagnosticsHistory.splice(0, diagnosticsHistory.length - DIAGNOSTICS_LIMIT);
+        }
+        updateDiagnosticsView({ error });
+    };
+
     const hasFreeTier = () => freeTier && typeof freeTier.respond === 'function';
 
     const setStatus = (message, { error = false } = {}) => {
         statusField.textContent = message || '';
         statusField.style.color = error ? '#ff8fb7' : '#d4c7ff';
+        if (message) {
+            recordDiagnostic(`Статус ключа: ${message}`, { error });
+        }
     };
 
     const updateEndpointStatus = (message, { error = false } = {}) => {
         if (!endpointStatusField) return;
         endpointStatusField.textContent = message || '';
         endpointStatusField.style.color = error ? '#ff8fb7' : '#d4c7ff';
+        if (message) {
+            recordDiagnostic(`Статус API: ${message}`, { error });
+        }
     };
 
     const describeEndpoint = () => {
@@ -306,7 +343,7 @@ export function createGptIntegration({
 
     const toggleBusy = (value) => {
         busy = Boolean(value);
-        [saveButton, testButton, endpointSaveButton].forEach((button) => {
+        [saveButton, testButton, endpointSaveButton, diagnosticsButton].forEach((button) => {
             if (button) {
                 button.disabled = busy;
             }
@@ -395,10 +432,15 @@ export function createGptIntegration({
 
     const safeFetchCall = async (url, options) => {
         try {
-            return await fetchImpl(url, options);
+            const response = await fetchImpl(url, options);
+            const method = options?.method || 'GET';
+            const status = typeof response?.status === 'number' ? response.status : 'нет статуса';
+            recordDiagnostic(`HTTP ${method} ${url} → статус ${status}`);
+            return response;
         } catch (error) {
             const networkError = new Error(error instanceof Error ? error.message : String(error));
             networkError.code = 'NETWORK_ERROR';
+            recordDiagnostic(`Сетевая ошибка при обращении к ${url}: ${networkError.message}`, { error: true });
             throw networkError;
         }
     };
@@ -419,6 +461,7 @@ export function createGptIntegration({
             error.code = response.status === 404 ? 'UNSUPPORTED_ROUTE' : 'API_ERROR';
             error.status = response.status;
             error.details = data;
+            recordDiagnostic(`Chat Completions ошибка ${response.status}: ${error.message}`, { error: true });
             throw error;
         }
 
@@ -453,6 +496,7 @@ export function createGptIntegration({
             error.code = 'API_ERROR';
             error.status = response.status;
             error.details = data;
+            recordDiagnostic(`/responses ошибка ${response.status}: ${error.message}`, { error: true });
             throw error;
         }
 
@@ -541,6 +585,79 @@ export function createGptIntegration({
         const { messages, isoStamp } = buildDateTimeProbe();
         const answer = await query(messages, { temperature: 0 });
         return { answer, isoStamp };
+    };
+
+    const runDiagnostics = async () => {
+        recordDiagnostic('Диагностика: старт.');
+        toggleBusy(true);
+        try {
+            const base = baseForFetch();
+            const endpointSummary = projectId
+                ? `Текущий endpoint ${base}, проект ${projectId}.`
+                : `Текущий endpoint ${base}.`;
+            recordDiagnostic(endpointSummary);
+
+            try {
+                const pingResponse = await safeFetchCall(base, {
+                    method: 'GET',
+                    mode: 'cors',
+                    cache: 'no-store'
+                });
+                const status = typeof pingResponse?.status === 'number' ? pingResponse.status : 'нет статуса';
+                recordDiagnostic(`Проверка базового URL завершена со статусом ${status}.`, {
+                    error: typeof status === 'number' && status >= 500
+                });
+            } catch (error) {
+                const message = error instanceof Error ? error.message : String(error);
+                recordDiagnostic(`Не удалось обратиться к базовому URL: ${message}`, { error: true });
+                setStatus('Не удалось связаться с базовым URL OpenAI. Проверьте интернет или CORS.', { error: true });
+                return false;
+            }
+
+            if (gptApiKey) {
+                recordDiagnostic('Ключ найден. Запускаю контрольный запрос к OpenAI.');
+                const success = await testKey({ message: 'Диагностика: проверяю ключ...' });
+                recordDiagnostic(success ? 'Диагностика завершена успешно.' : 'Проверка ключа завершилась с ошибками.', {
+                    error: !success
+                });
+                return success;
+            }
+
+            if (hasFreeTier()) {
+                recordDiagnostic('Ключ не найден. Проверяю бесплатный движок Milana Super GPT.');
+                try {
+                    const reply = await query([
+                        { role: 'system', content: 'Диагностический запрос бесплатного режима.' },
+                        { role: 'user', content: 'Ответь коротко словом «готово».' }
+                    ], { useFreeTier: true });
+                    const trimmed = typeof reply === 'string' ? reply.trim() : '';
+                    if (trimmed) {
+                        const short = trimmed.length > 90 ? `${trimmed.slice(0, 90)}…` : trimmed;
+                        recordDiagnostic(`Free tier ответил: ${short}`);
+                    }
+                    setStatus('Диагностика бесплатного режима завершена. Добавьте ключ, чтобы подключить облачные модели.', {
+                        error: false
+                    });
+                    return true;
+                } catch (error) {
+                    const message = error instanceof Error ? error.message : String(error);
+                    recordDiagnostic(`Бесплатный режим вернул ошибку: ${message}`, { error: true });
+                    setStatus(formatError(error), { error: true });
+                    return false;
+                }
+            }
+
+            recordDiagnostic('Ключ не задан. Добавьте ключ OpenAI API для диагностики облачного соединения.', { error: true });
+            setStatus('Добавьте ключ OpenAI API, чтобы пройти диагностику облачного соединения.', { error: true });
+            return false;
+        } catch (error) {
+            const message = error instanceof Error ? error.message : String(error);
+            recordDiagnostic(`Диагностика завершилась исключением: ${message}`, { error: true });
+            setStatus(formatError(error), { error: true });
+            return false;
+        } finally {
+            toggleBusy(false);
+        }
     };
 
     const testKey = async ({ candidate, message } = {}) => {
@@ -648,6 +765,12 @@ export function createGptIntegration({
             });
         }
 
+        if (diagnosticsButton) {
+            diagnosticsButton.addEventListener('click', () => {
+                runDiagnostics();
+            });
+        }
+
         if (endpointSaveButton) {
             endpointSaveButton.addEventListener('click', () => {
                 const baseCandidate = apiBaseField?.value;
@@ -712,6 +835,7 @@ export function createGptIntegration({
         applyKeyFromQuery,
         query,
         testKey,
+        runDiagnostics,
         formatError,
         runDateTimeProbe,
         ready

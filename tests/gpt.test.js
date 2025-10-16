@@ -13,6 +13,8 @@ const createDom = () => {
       <input id="gptProjectId" />
       <button id="gptSaveEndpoint"></button>
       <p id="gptEndpointStatus"></p>
+      <button id="gptRunDiagnostics"></button>
+      <pre id="gptDiagnosticsLog"></pre>
     </div>
   `;
 
@@ -25,7 +27,9 @@ const createDom = () => {
     apiBaseField: document.getElementById('gptApiBase'),
     projectField: document.getElementById('gptProjectId'),
     endpointSaveButton: document.getElementById('gptSaveEndpoint'),
-    endpointStatusField: document.getElementById('gptEndpointStatus')
+    endpointStatusField: document.getElementById('gptEndpointStatus'),
+    diagnosticsButton: document.getElementById('gptRunDiagnostics'),
+    diagnosticsLog: document.getElementById('gptDiagnosticsLog')
   };
 };
 
@@ -51,6 +55,7 @@ const createFetchSuccess = (content = 'готово') => {
     if (typeof url === 'string' && url.includes('/responses')) {
       return {
         ok: true,
+        status: 200,
         json: async () => ({
           output: [
             {
@@ -65,6 +70,7 @@ const createFetchSuccess = (content = 'готово') => {
     }
     return {
       ok: true,
+      status: 200,
       json: async () => ({
         choices: [
           { message: { content: text } }
@@ -286,5 +292,30 @@ describe('createGptIntegration', () => {
     expect(reply).toBe('ответ free tier');
     expect(freeTier.respond).toHaveBeenCalledTimes(1);
     expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it('ведёт журнал диагностики и подтверждает рабочий ключ', async () => {
+    const storage = createStorage({ gptApiKey: 'sk-diagnostic' });
+    const fetchMock = createFetchSuccess([
+      'готово',
+      'Интеграция подтверждена. Время 2025-02-14T10:15:00.000Z'
+    ]);
+    const elements = createDom();
+
+    const integration = createGptIntegration({
+      ...elements,
+      storage,
+      fetchImpl: fetchMock,
+      autoApplyQuery: false
+    });
+
+    const success = await integration.runDiagnostics();
+
+    expect(success).toBe(true);
+    expect(fetchMock).toHaveBeenCalledTimes(3);
+    expect(elements.diagnosticsLog.textContent).toContain('Диагностика: старт');
+    expect(elements.diagnosticsLog.textContent).toContain('Текущий endpoint');
+    expect(elements.diagnosticsLog.textContent).toContain('Интеграция активна');
+    expect(elements.diagnosticsLog.dataset.state).toBe('info');
   });
 });
