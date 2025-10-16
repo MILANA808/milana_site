@@ -47,6 +47,48 @@ const sanitiseBaseUrl = (value) => {
     }
 };
 
+const sanitiseRelayEndpoint = (value, locationHref) => {
+    const trimmed = typeof value === 'string' ? value.trim() : '';
+    if (!trimmed) {
+        return '';
+    }
+
+    if (/^https?:\/\//i.test(trimmed)) {
+        try {
+            const url = new URL(trimmed);
+            url.hash = '';
+            return url.toString().replace(/\/+$/, '');
+        } catch (error) {
+            return null;
+        }
+    }
+
+    if (trimmed.startsWith('/')) {
+        if (!locationHref) {
+            return trimmed.replace(/\/+$/, '');
+        }
+        try {
+            const origin = new URL(locationHref).origin;
+            return `${origin}${trimmed}`.replace(/\/+$/, '');
+        } catch (error) {
+            return trimmed.replace(/\/+$/, '');
+        }
+    }
+
+    if (!locationHref) {
+        return null;
+    }
+
+    try {
+        const base = new URL(locationHref);
+        const url = new URL(trimmed, base);
+        url.hash = '';
+        return url.toString().replace(/\/+$/, '');
+    } catch (error) {
+        return null;
+    }
+};
+
 const normaliseMessagesForResponses = (messages = []) => {
     if (!Array.isArray(messages)) return [];
     return messages.map((message = {}) => {
@@ -155,6 +197,10 @@ export function createGptIntegration({
     statusField,
     apiBaseField,
     projectField,
+    relayField,
+    relaySaveButton,
+    relayClearButton,
+    relayStatusField,
     endpointSaveButton,
     endpointStatusField,
     diagnosticsButton,
@@ -178,6 +224,7 @@ export function createGptIntegration({
     let busy = false;
     let apiBase = DEFAULT_API_BASE;
     let projectId = '';
+    let relayEndpoint = '';
 
     const DIAGNOSTICS_LIMIT = 30;
     const diagnosticsHistory = [];
@@ -227,12 +274,25 @@ export function createGptIntegration({
         }
     };
 
+    const setRelayStatus = (message, { error = false } = {}) => {
+        if (!relayStatusField) return;
+        relayStatusField.textContent = message || '';
+        relayStatusField.style.color = error ? '#ff8fb7' : '#d4c7ff';
+        if (message) {
+            recordDiagnostic(`Статус ретранслятора: ${message}`, { error });
+        }
+    };
+
     const describeEndpoint = () => {
         const parts = [`Базовый URL: ${apiBase || DEFAULT_API_BASE}.`];
         parts.push(projectId ? `Project ID: ${projectId}.` : 'Project ID не задан.');
         parts.push('Настройте прокси или проектные ключи в расширенном блоке при необходимости.');
         return parts.join(' ');
     };
+
+    const describeRelay = () => relayEndpoint
+        ? `Ретранслятор активен: ${relayEndpoint}.`
+        : 'Ретранслятор не настроен. Запросы идут напрямую.';
 
     const syncField = (value) => {
         if (!keyField) return;
@@ -247,6 +307,11 @@ export function createGptIntegration({
     const syncProjectField = (value) => {
         if (!projectField) return;
         projectField.value = value || '';
+    };
+
+    const syncRelayField = (value) => {
+        if (!relayField) return;
+        relayField.value = value || '';
     };
 
     const persistApiBase = (value, { silent = false } = {}) => {
@@ -290,9 +355,45 @@ export function createGptIntegration({
         return projectId;
     };
 
+    const persistRelayEndpoint = (value, { silent = false } = {}) => {
+        const sanitised = sanitiseRelayEndpoint(value, locationHref);
+        if (sanitised === '') {
+            relayEndpoint = '';
+            storageAPI.removeItem('gptRelayEndpoint');
+            syncRelayField('');
+            if (!silent) {
+                setRelayStatus('Ретранслятор отключён. Запросы пойдут напрямую.');
+            } else {
+                setRelayStatus(describeRelay());
+            }
+            return relayEndpoint;
+        }
+
+        if (!sanitised) {
+            if (!silent) {
+                setRelayStatus('Некорректный адрес ретранслятора. Укажите полный URL или относительный путь.', { error: true });
+            }
+            syncRelayField(relayEndpoint);
+            return relayEndpoint;
+        }
+
+        relayEndpoint = sanitised;
+        storageAPI.setItem('gptRelayEndpoint', relayEndpoint);
+        syncRelayField(relayEndpoint);
+        if (!silent) {
+            setRelayStatus('Ретранслятор сохранён. Запросы будут отправляться через него.');
+        } else {
+            setRelayStatus(describeRelay());
+        }
+        return relayEndpoint;
+    };
+
+    const clearRelayEndpoint = ({ silent = false } = {}) => persistRelayEndpoint('', { silent });
+
     const loadEndpointSettings = ({ silent = false } = {}) => {
         const storedBase = storageAPI.getItem('gptApiBase');
         const storedProject = storageAPI.getItem('gptProjectId');
+        const storedRelay = storageAPI.getItem('gptRelayEndpoint');
 
         const resolvedBase = sanitiseBaseUrl(storedBase) || DEFAULT_API_BASE;
         apiBase = resolvedBase;
@@ -307,13 +408,21 @@ export function createGptIntegration({
         }
         syncProjectField(projectId);
 
-        if (silent) {
-            updateEndpointStatus(describeEndpoint());
+        if (typeof storedRelay === 'string') {
+            persistRelayEndpoint(storedRelay, { silent: true });
         } else {
-            updateEndpointStatus(`Настройки API загружены. ${describeEndpoint()}`);
+            clearRelayEndpoint({ silent: true });
         }
 
-        return { apiBase, projectId };
+        if (silent) {
+            updateEndpointStatus(describeEndpoint());
+            setRelayStatus(describeRelay());
+        } else {
+            updateEndpointStatus(`Настройки API загружены. ${describeEndpoint()}`);
+            setRelayStatus(describeRelay());
+        }
+
+        return { apiBase, projectId, relayEndpoint };
     };
 
     const persistKey = (value, { silent = false, message } = {}) => {
@@ -343,7 +452,7 @@ export function createGptIntegration({
 
     const toggleBusy = (value) => {
         busy = Boolean(value);
-        [saveButton, testButton, endpointSaveButton, diagnosticsButton].forEach((button) => {
+        [saveButton, testButton, endpointSaveButton, diagnosticsButton, relaySaveButton, relayClearButton].forEach((button) => {
             if (button) {
                 button.disabled = busy;
             }
@@ -351,11 +460,13 @@ export function createGptIntegration({
     };
 
     const loadFromStorage = ({ silent = false } = {}) => {
-        loadEndpointSettings({ silent });
+        const { relayEndpoint: currentRelay } = loadEndpointSettings({ silent });
         gptApiKey = storageAPI.getItem('gptApiKey') || '';
         syncField(gptApiKey);
         if (gptApiKey) {
             setStatus('Ключ загружен и готов к работе.');
+        } else if (currentRelay) {
+            setStatus('Ретранслятор активен. Запросы будут выполняться через сервер.');
         } else if (hasFreeTier()) {
             setStatus('Бесплатный режим Milana Super GPT активен. Добавьте ключ, чтобы подключить облачные модели.');
         } else {
@@ -368,7 +479,9 @@ export function createGptIntegration({
         gptApiKey = '';
         storageAPI.removeItem('gptApiKey');
         syncField('');
-        if (hasFreeTier()) {
+        if (relayEndpoint) {
+            setStatus('Ключ удалён. Запросы продолжат идти через настроенный ретранслятор.');
+        } else if (hasFreeTier()) {
             setStatus('Ключ удалён. Доступен бесплатный режим Super GPT без облачных моделей.');
         } else {
             setStatus('Ключ удалён из этого браузера.');
@@ -396,6 +509,12 @@ export function createGptIntegration({
         if (error.code === 'NETWORK_ERROR') {
             return 'Не удалось подключиться к OpenAI. Проверьте интернет, HTTPS-доступ к базовому URL и настройки CORS либо используйте собственный прокси.';
         }
+        if (error.code === 'RELAY_ERROR') {
+            return `Ретранслятор вернул ошибку: ${error.message}. Проверьте адрес сервера или его логи.`;
+        }
+        if (error.code === 'RELAY_DISABLED') {
+            return 'Ретранслятор не настроен. Укажите URL сервера или добавьте ключ API.';
+        }
         if (error.code === 'FREE_TIER_EMPTY') {
             return 'Бесплатный режим Super GPT не смог подготовить ответ. Уточните запрос или добавьте ключ для облачных моделей.';
         }
@@ -412,6 +531,9 @@ export function createGptIntegration({
         }
         if (error.code === 'EMPTY_RESPONSE') {
             return 'GPT вернул пустой ответ. Попробуйте отправить запрос повторно.';
+        }
+        if (error.code === 'NO_ROUTE') {
+            return 'Нет доступного пути до GPT. Добавьте ключ, настройте ретранслятор или включите бесплатный режим.';
         }
         return `Ошибка GPT: ${error.message}`;
     };
@@ -509,49 +631,175 @@ export function createGptIntegration({
         return text;
     };
 
+    const callRelayEndpoint = async ({ messages, temperature, model }) => {
+        if (!relayEndpoint) {
+            const error = new Error('Ретранслятор не настроен.');
+            error.code = 'RELAY_DISABLED';
+            throw error;
+        }
+
+        const response = await safeFetchCall(relayEndpoint, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+                mode: 'chat',
+                messages,
+                temperature,
+                model
+            }),
+            cache: 'no-store',
+            mode: 'cors'
+        });
+
+        const data = await safeJson(response);
+        if (!response.ok) {
+            const message = data?.error?.message || `Ошибка ретранслятора (${response.status})`;
+            const error = new Error(message);
+            error.code = 'RELAY_ERROR';
+            error.status = response.status;
+            error.details = data;
+            recordDiagnostic(`Ретранслятор ответил ошибкой ${response.status}: ${message}`, { error: true });
+            throw error;
+        }
+
+        if (Array.isArray(data?.log)) {
+            data.log.forEach((entry) => {
+                if (entry) {
+                    recordDiagnostic(`Relay log: ${entry}`);
+                }
+            });
+        }
+
+        const route = typeof data?.route === 'string' ? data.route : '';
+        if (route) {
+            recordDiagnostic(`Ретранслятор использовал маршрут ${route}.`);
+        }
+
+        const text = typeof data?.text === 'string' ? data.text.trim() : '';
+        if (!text) {
+            const error = new Error('Ретранслятор вернул пустой ответ.');
+            error.code = 'EMPTY_RESPONSE';
+            throw error;
+        }
+
+        return text;
+    };
+
+    const pingRelay = async () => {
+        if (!relayEndpoint) return null;
+
+        const response = await safeFetchCall(relayEndpoint, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({ mode: 'ping' }),
+            cache: 'no-store',
+            mode: 'cors'
+        });
+
+        const data = await safeJson(response);
+        if (!response.ok) {
+            const message = data?.error?.message || `Ретранслятор ответил статусом ${response.status}`;
+            const error = new Error(message);
+            error.code = 'RELAY_ERROR';
+            error.status = response.status;
+            error.details = data;
+            throw error;
+        }
+
+        return data;
+    };
+
     const query = async (messages, {
         temperature = 0.7,
         model = DEFAULT_GPT_MODEL,
         useFreeTier = false
     } = {}) => {
+        const attempts = [];
+
+        if (relayEndpoint) {
+            attempts.push(async () => {
+                recordDiagnostic('Пробую отправить запрос через ретранслятор.');
+                return await callRelayEndpoint({ messages, temperature, model });
+            });
+        }
+
         if (gptApiKey) {
-            try {
+            attempts.push(async () => {
+                recordDiagnostic('Отправляю запрос в OpenAI /chat/completions.');
                 return await callChatCompletions({ messages, temperature, model });
-            } catch (error) {
-                if (error.code === 'UNSUPPORTED_ROUTE' || (error.code === 'API_ERROR' && error.status === 404)) {
-                    try {
-                        const fallback = await callResponsesEndpoint({ messages, temperature, model });
-                        updateEndpointStatus(`Chat Completions недоступен. Автоматически использую /responses. ${describeEndpoint()}`);
-                        return fallback;
-                    } catch (fallbackError) {
-                        throw fallbackError;
-                    }
-                }
-                throw error;
-            }
+            });
+            attempts.push(async () => {
+                recordDiagnostic('Отправляю запрос в OpenAI /responses.');
+                const reply = await callResponsesEndpoint({ messages, temperature, model });
+                updateEndpointStatus(`Использован endpoint /responses. ${describeEndpoint()}`);
+                return reply;
+            });
         }
 
         if (useFreeTier && hasFreeTier()) {
+            attempts.push(async () => {
+                recordDiagnostic('Активирую бесплатный режим Super GPT.');
+                try {
+                    const answer = await freeTier.respond(messages, { temperature, model });
+                    const text = typeof answer === 'string' ? answer.trim() : '';
+                    if (!text) {
+                        const error = new Error('Бесплатный движок не вернул ответ.');
+                        error.code = 'FREE_TIER_EMPTY';
+                        throw error;
+                    }
+                    return text;
+                } catch (error) {
+                    if (error && typeof error === 'object' && 'code' in error) {
+                        throw error;
+                    }
+                    const wrapped = new Error(error instanceof Error ? error.message : String(error));
+                    wrapped.code = 'FREE_TIER_FAILED';
+                    throw wrapped;
+                }
+            });
+        }
+
+        if (!attempts.length) {
+            if (!gptApiKey && !relayEndpoint) {
+                const error = new Error('Добавьте ключ OpenAI API или настройте ретранслятор, чтобы выполнить запрос.');
+                error.code = 'NO_KEY';
+                throw error;
+            }
+            const error = new Error('Нет доступных маршрутов для запроса к GPT.');
+            error.code = 'NO_ROUTE';
+            throw error;
+        }
+
+        let lastError = null;
+        for (const attempt of attempts) {
             try {
-                const answer = await freeTier.respond(messages, { temperature, model });
-                const text = typeof answer === 'string' ? answer.trim() : '';
-                if (!text) {
-                    const error = new Error('Бесплатный движок не вернул ответ.');
-                    error.code = 'FREE_TIER_EMPTY';
-                    throw error;
+                const result = await attempt();
+                if (typeof result === 'string' && result.trim()) {
+                    return result.trim();
                 }
-                return text;
             } catch (error) {
-                if (error && typeof error === 'object' && 'code' in error) {
-                    throw error;
+                const normalized = error instanceof Error ? error : new Error(String(error));
+                lastError = normalized;
+                recordDiagnostic(`Попытка запроса завершилась ошибкой: ${normalized.message}`, { error: true });
+                if (normalized.code === 'UNSUPPORTED_ROUTE') {
+                    continue;
                 }
-                const wrapped = new Error(error instanceof Error ? error.message : String(error));
-                wrapped.code = 'FREE_TIER_FAILED';
-                throw wrapped;
             }
         }
 
-        ensureKey();
+        if (lastError) {
+            throw lastError;
+        }
+
+        const fallbackError = new Error('GPT вернул пустой ответ.');
+        fallbackError.code = 'EMPTY_RESPONSE';
+        throw fallbackError;
     };
 
     const buildDateTimeProbe = () => {
@@ -591,6 +839,22 @@ export function createGptIntegration({
         recordDiagnostic('Диагностика: старт.');
         toggleBusy(true);
         try {
+            if (relayEndpoint) {
+                recordDiagnostic(`Ретранслятор активен (${relayEndpoint}). Проверяю отклик...`);
+                try {
+                    const relayResponse = await pingRelay();
+                    const summary = relayResponse?.message || 'Ретранслятор ответил успешно.';
+                    recordDiagnostic(`Relay ping: ${summary}`);
+                    setRelayStatus(`Ретранслятор отвечает. ${summary}`);
+                } catch (error) {
+                    const message = error instanceof Error ? error.message : String(error);
+                    recordDiagnostic(`Ретранслятор не ответил: ${message}`, { error: true });
+                    setRelayStatus(`Ретранслятор не отвечает: ${message}`, { error: true });
+                }
+            } else {
+                setRelayStatus(describeRelay());
+            }
+
             const base = baseForFetch();
             const endpointSummary = projectId
                 ? `Текущий endpoint ${base}, проект ${projectId}.`
@@ -621,6 +885,25 @@ export function createGptIntegration({
                     error: !success
                 });
                 return success;
+            }
+
+            if (relayEndpoint) {
+                recordDiagnostic('Ключ отсутствует, проверяю ретранслятор запросом к GPT.');
+                try {
+                    const confirmation = await query([
+                        { role: 'system', content: 'Диагностика ретранслятора Milana Super GPT.' },
+                        { role: 'user', content: 'Ответь фразой «relay-ok».' }
+                    ]);
+                    const short = confirmation.length > 90 ? `${confirmation.slice(0, 90)}…` : confirmation;
+                    setStatus(`Ретранслятор активен. Ответ: ${short}`);
+                    recordDiagnostic(`Ретранслятор вернул ответ: ${short}`);
+                    return true;
+                } catch (error) {
+                    const message = error instanceof Error ? error.message : String(error);
+                    recordDiagnostic(`Ретранслятор не прошёл проверку: ${message}`, { error: true });
+                    setStatus(formatError(error), { error: true });
+                    return false;
+                }
             }
 
             if (hasFreeTier()) {
@@ -662,20 +945,28 @@ export function createGptIntegration({
 
     const testKey = async ({ candidate, message } = {}) => {
         const candidateValue = typeof candidate === 'string' ? candidate.trim() : '';
-        const resolvedCandidate = candidateValue || keyField.value.trim();
+        const previousKey = gptApiKey;
+        let persisted = gptApiKey;
 
-        if (!resolvedCandidate && !gptApiKey) {
+        if (candidateValue) {
+            persisted = persistKey(candidateValue, { silent: true });
+        } else if (gptApiKey) {
+            persisted = gptApiKey;
+            syncField(gptApiKey);
+        } else if (keyField.value.trim()) {
+            persisted = persistKey(keyField.value.trim(), { silent: true });
+        }
+
+        if (!persisted && !relayEndpoint) {
             setStatus('Введите ключ перед проверкой.', { error: true });
             keyField.focus();
             return false;
         }
 
-        const previousKey = gptApiKey;
-        const persisted = persistKey(resolvedCandidate, { silent: true });
-        const isNewCandidate = persisted && persisted !== previousKey;
-        const statusMessage = message || (isNewCandidate
-            ? 'Ключ сохранён, запускаю проверку...'
-            : 'Запускаю проверку ключа...');
+        const isNewCandidate = Boolean(persisted && persisted !== previousKey);
+        const statusMessage = message || (persisted
+            ? (isNewCandidate ? 'Ключ сохранён, запускаю проверку...' : 'Запускаю проверку ключа...')
+            : 'Ключ не задан. Проверяю ретранслятор...');
         setStatus(statusMessage);
 
         toggleBusy(true);
@@ -684,13 +975,24 @@ export function createGptIntegration({
                 { role: 'system', content: 'Ты лаконичный проверочный бот.' },
                 { role: 'user', content: 'Ответь одним словом «готово».' }
             ], { temperature: 0 });
-            setStatus(`Ключ подтверждён. GPT ответил: ${confirmation}. Запрашиваю дату и время...`);
+            if (persisted) {
+                setStatus(`Ключ подтверждён. GPT ответил: ${confirmation}. Запрашиваю дату и время...`);
+            } else {
+                setStatus(`Ретранслятор активен. GPT ответил: ${confirmation}. Запрашиваю дату и время...`);
+            }
             try {
                 const { answer, isoStamp } = await runDateTimeProbe();
-                setStatus(`Интеграция активна. GPT подтвердил время ${isoStamp}. Ответ: ${answer}`);
+                if (persisted) {
+                    setStatus(`Интеграция активна. GPT подтвердил время ${isoStamp}. Ответ: ${answer}`);
+                } else {
+                    setStatus(`Ретранслятор подтверждён. GPT повторил время ${isoStamp}. Ответ: ${answer}`);
+                }
                 return true;
             } catch (error) {
-                setStatus(`Ключ подтверждён, но проверка времени не удалась. ${formatError(error)}`, { error: true });
+                const prefix = persisted
+                    ? 'Ключ подтверждён, но проверка времени не удалась.'
+                    : 'Ретранслятор ответил, но проверка времени не удалась.';
+                setStatus(`${prefix} ${formatError(error)}`, { error: true });
                 return false;
             }
         } catch (error) {
@@ -781,6 +1083,19 @@ export function createGptIntegration({
             });
         }
 
+        if (relaySaveButton) {
+            relaySaveButton.addEventListener('click', () => {
+                const relayCandidate = relayField?.value;
+                persistRelayEndpoint(relayCandidate);
+            });
+        }
+
+        if (relayClearButton) {
+            relayClearButton.addEventListener('click', () => {
+                clearRelayEndpoint();
+            });
+        }
+
         if (apiBaseField) {
             apiBaseField.addEventListener('blur', () => {
                 persistApiBase(apiBaseField.value);
@@ -801,6 +1116,18 @@ export function createGptIntegration({
                 if (event.key === 'Enter') {
                     event.preventDefault();
                     persistProjectId(projectField.value);
+                }
+            });
+        }
+
+        if (relayField) {
+            relayField.addEventListener('blur', () => {
+                persistRelayEndpoint(relayField.value);
+            });
+            relayField.addEventListener('keydown', (event) => {
+                if (event.key === 'Enter') {
+                    event.preventDefault();
+                    persistRelayEndpoint(relayField.value);
                 }
             });
         }
@@ -825,10 +1152,15 @@ export function createGptIntegration({
         get project() {
             return projectId;
         },
+        get relay() {
+            return relayEndpoint;
+        },
         isBusy: () => busy,
         persistKey,
         persistApiBase,
         persistProjectId,
+        persistRelayEndpoint,
+        clearRelayEndpoint,
         clearKey,
         loadFromStorage,
         loadEndpointSettings,

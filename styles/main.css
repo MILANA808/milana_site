@@ -462,6 +462,26 @@ button.secondary:focus-visible:not(:disabled) {
     gap: 0.75rem;
 }
 
+.relay-panel {
+    margin-top: 1.25rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(167, 109, 255, 0.2);
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.relay-panel h3 {
+    margin: 0;
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: #f3e9ff;
+}
+
+.relay-panel .inline-input-group {
+    gap: 0.5rem;
+}
+
 .advanced-grid label {
     display: flex;
     flex-direction: column;

@@ -102,6 +102,16 @@
                         <button type="button" id="gptSaveEndpoint" class="secondary">Сохранить настройки API</button>
                     </div>
                     <p id="gptEndpointStatus" class="note"></p>
+                    <div class="relay-panel">
+                        <h3>Сервер-ретранслятор (опционально)</h3>
+                        <p class="note small-note">Используйте, если хотите хранить ключ на своём сервере. Укажите абсолютный URL или относительный путь (например, /api/gpt). Запросы и диагностика будут идти через ретранслятор.</p>
+                        <div class="inline-input-group">
+                            <input type="url" id="gptRelayEndpoint" placeholder="https://example.com/api/gpt" autocomplete="off">
+                            <button type="button" id="gptSaveRelay" class="secondary">Сохранить ретранслятор</button>
+                            <button type="button" id="gptClearRelay" class="secondary">Очистить</button>
+                        </div>
+                        <p id="gptRelayStatus" class="note"></p>
+                    </div>
                 </details>
                 <div class="diagnostics-panel">
                     <button type="button" id="gptRunDiagnostics" class="secondary">Диагностировать соединение</button>

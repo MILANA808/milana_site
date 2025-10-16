@@ -11,6 +11,10 @@ const createDom = () => {
       <p id="gptKeyStatus"></p>
       <input id="gptApiBase" />
       <input id="gptProjectId" />
+      <input id="gptRelayEndpoint" />
+      <button id="gptSaveRelay"></button>
+      <button id="gptClearRelay"></button>
+      <p id="gptRelayStatus"></p>
       <button id="gptSaveEndpoint"></button>
       <p id="gptEndpointStatus"></p>
       <button id="gptRunDiagnostics"></button>
@@ -26,6 +30,10 @@ const createDom = () => {
     statusField: document.getElementById('gptKeyStatus'),
     apiBaseField: document.getElementById('gptApiBase'),
     projectField: document.getElementById('gptProjectId'),
+    relayField: document.getElementById('gptRelayEndpoint'),
+    relaySaveButton: document.getElementById('gptSaveRelay'),
+    relayClearButton: document.getElementById('gptClearRelay'),
+    relayStatusField: document.getElementById('gptRelayStatus'),
     endpointSaveButton: document.getElementById('gptSaveEndpoint'),
     endpointStatusField: document.getElementById('gptEndpointStatus'),
     diagnosticsButton: document.getElementById('gptRunDiagnostics'),
@@ -87,6 +95,53 @@ const createFetchFailure = (status = 401, message = 'некорректный к
     error: { message }
   })
 }));
+
+const createRelayFetch = (sequence = []) => {
+  let index = 0;
+  return vi.fn(async (url, options = {}) => {
+    const body = options.body ? JSON.parse(options.body) : {};
+    if (String(url).includes('relay.example')) {
+      const current = sequence[Math.min(index, sequence.length - 1)] || {};
+      index += 1;
+
+      if (body.mode === 'ping') {
+        return {
+          ok: true,
+          status: 200,
+          json: async () => current.ping || { message: 'relay pong', timestamp: '2025-02-14T10:15:00.000Z' }
+        };
+      }
+
+      if (current.ok === false) {
+        return {
+          ok: false,
+          status: current.status || 500,
+          json: async () => ({ error: { message: current.message || 'relay error' } })
+        };
+      }
+
+      return {
+        ok: true,
+        status: 200,
+        json: async () => ({
+          text: current.text || 'relay ok',
+          route: current.route || 'chat/completions',
+          log: current.log || ['relay request processed']
+        })
+      };
+    }
+
+    if (String(url).includes('api.openai.com')) {
+      return {
+        ok: true,
+        status: 200,
+        json: async () => ({})
+      };
+    }
+
+    throw new Error(`Неожиданный URL ${url}`);
+  });
+};
 
 describe('createGptIntegration', () => {
   beforeEach(() => {
@@ -177,7 +232,7 @@ describe('createGptIntegration', () => {
     const result = await integration.testKey();
 
     expect(result).toBe(false);
-    expect(fetchMock).toHaveBeenCalledTimes(1);
+    expect(fetchMock).toHaveBeenCalledTimes(2);
     expect(elements.statusField.textContent).toContain('OpenAI отклонил запрос (invalid key)');
   });
 
@@ -205,6 +260,73 @@ describe('createGptIntegration', () => {
     expect(integration.project).toBe('proj_test');
     expect(elements.endpointStatusField.textContent).toContain('proxy.example.com');
     expect(elements.endpointStatusField.textContent).toContain('proj_test');
+  });
+
+  it('использует ретранслятор без сохранённого ключа', async () => {
+    const storage = createStorage({ gptRelayEndpoint: 'https://relay.example/api/gpt' });
+    const fetchMock = createRelayFetch([{ text: 'relay answer', route: 'chat/completions' }]);
+    const elements = createDom();
+
+    const integration = createGptIntegration({
+      ...elements,
+      storage,
+      fetchImpl: fetchMock,
+      autoApplyQuery: false
+    });
+
+    const reply = await integration.query([
+      { role: 'user', content: 'ping relay' }
+    ]);
+
+    expect(reply).toBe('relay answer');
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    expect(fetchMock.mock.calls[0][0]).toBe('https://relay.example/api/gpt');
+    expect(elements.statusField.textContent).toContain('Ретранслятор активен');
+  });
+
+  it('диагностика пингует ретранслятор и возвращает успех', async () => {
+    const storage = createStorage({ gptRelayEndpoint: 'https://relay.example/api/gpt' });
+    const fetchMock = createRelayFetch([
+      { ping: { message: 'Relay online' } },
+      { text: 'relay-ok' }
+    ]);
+    const elements = createDom();
+
+    const integration = createGptIntegration({
+      ...elements,
+      storage,
+      fetchImpl: fetchMock,
+      autoApplyQuery: false
+    });
+
+  const result = await integration.runDiagnostics();
+
+  expect(result).toBe(true);
+    expect(fetchMock).toHaveBeenCalledTimes(3);
+    expect(elements.statusField.textContent).toContain('Ретранслятор активен');
+    expect(elements.diagnosticsLog.textContent).toContain('Relay ping');
+  });
+
+  it('тест ключа проходит через ретранслятор', async () => {
+    const storage = createStorage({ gptRelayEndpoint: 'https://relay.example/api/gpt' });
+    const fetchMock = createRelayFetch([
+      { text: 'готово' },
+      { text: 'ISO 2025-02-14T10:15:00.000Z' }
+    ]);
+    const elements = createDom();
+
+    const integration = createGptIntegration({
+      ...elements,
+      storage,
+      fetchImpl: fetchMock,
+      autoApplyQuery: false
+    });
+
+    const success = await integration.testKey();
+
+    expect(success).toBe(true);
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+    expect(elements.statusField.textContent).toContain('Ретранслятор подтверждён');
   });
 
   it('использует endpoint responses когда chat completions недоступен', async () => {
@@ -242,7 +364,7 @@ describe('createGptIntegration', () => {
 
     expect(answer).toBe('готово');
     expect(fetchMock).toHaveBeenCalledTimes(2);
-    expect(elements.endpointStatusField.textContent).toContain('использую /responses');
+    expect(elements.endpointStatusField.textContent).toContain('Использован endpoint /responses');
   });
 
   it('применяет ключ из URL и сразу проводит проверку', async () => {
