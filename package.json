@@ -1,13 +1,8 @@
 {
-  "name": "milana_site",
+  "name": "aksi-sabsus",
   "version": "1.0.0",
-  "type": "module",
+  "private": true,
   "scripts": {
-    "test": "vitest run",
-    "relay": "node relay-server.mjs"
-  },
-  "devDependencies": {
-    "jsdom": "^24.0.0",
-    "vitest": "^1.6.0"
+    "test": "echo 'No automated tests for the visual experience.'"
   }
 }
