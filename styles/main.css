@@ -741,6 +741,125 @@ main {
   line-height: 1.4;
 }
 
+.ai-capacity,
+.ai-insights,
+.ai-stream {
+  border-radius: 1.4rem;
+  border: 1px solid rgba(146, 110, 255, 0.25);
+  background: rgba(24, 6, 50, 0.62);
+  padding: 1.1rem 1.3rem 1.3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.ai-capacity h4,
+.ai-insights h4,
+.ai-stream h4 {
+  font-size: 0.95rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(214, 197, 255, 0.76);
+}
+
+.ai-capacity-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.9rem;
+  font-size: 0.88rem;
+  color: rgba(255, 244, 255, 0.86);
+}
+
+.ai-capacity-grid div {
+  display: grid;
+  gap: 0.25rem;
+  padding: 0.6rem 0.7rem;
+  border-radius: 1rem;
+  background: rgba(42, 14, 78, 0.68);
+  border: 1px solid rgba(146, 110, 255, 0.25);
+}
+
+.ai-capacity-grid dt {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(199, 189, 255, 0.62);
+}
+
+.ai-capacity-grid dd {
+  margin: 0;
+  font-weight: 600;
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.ai-insights-body {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  min-height: 3.5rem;
+}
+
+.ai-insights-chip {
+  padding: 0.45rem 0.9rem;
+  border-radius: 999px;
+  background: rgba(118, 86, 255, 0.2);
+  border: 1px solid rgba(184, 159, 255, 0.4);
+  color: rgba(240, 231, 255, 0.85);
+  font-size: 0.82rem;
+  display: inline-flex;
+  gap: 0.35rem;
+  align-items: center;
+}
+
+.ai-insights-chip strong {
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.ai-insights-meta {
+  font-size: 0.72rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: rgba(199, 189, 255, 0.55);
+}
+
+.ai-stream-feed {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  max-height: clamp(10rem, 28vh, 16rem);
+  overflow-y: auto;
+}
+
+.ai-stream-entry {
+  display: grid;
+  gap: 0.45rem;
+  padding: 0.75rem 0.95rem;
+  border-radius: 1rem;
+  background: rgba(38, 9, 78, 0.74);
+  border: 1px solid rgba(168, 136, 255, 0.32);
+  box-shadow: 0 12px 24px rgba(12, 2, 24, 0.36);
+}
+
+.ai-stream-channel {
+  font-size: 0.72rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: rgba(214, 200, 255, 0.6);
+}
+
+.ai-stream-summary {
+  font-size: 0.9rem;
+  line-height: 1.45;
+  color: rgba(255, 245, 255, 0.9);
+}
+
+.ai-stream-meta {
+  font-size: 0.75rem;
+  color: rgba(199, 189, 255, 0.58);
+}
+
 .ai-typing {
   animation: aiTyping 1s infinite;
   background: rgba(20, 6, 44, 0.6);

@@ -42,6 +42,21 @@ const translations = {
     'ai.system.awake': 'AKSI подключилась к внутреннему ядру. Я готова вести автономные диалоги.',
     'ai.system.memoryRestored': 'Восстановлено фрагментов памяти: ',
     'ai.system.newDialog': 'Новый диалог активирован. Используйте подсказки или задайте собственный вопрос.',
+    'ai.memory.capacityTitle': 'Масштаб обработки',
+    'ai.memory.capacityFragments': 'Фрагменты',
+    'ai.memory.capacityIntents': 'Уникальные намерения',
+    'ai.memory.capacityTokens': 'Обработано слов',
+    'ai.memory.capacityStream': 'Потоковые сигналы',
+    'ai.insights.title': 'Аналитика ядра',
+    'ai.insights.empty': 'Недостаточно данных — начните взаимодействие, чтобы активировать аналитику.',
+    'ai.insights.updated': 'Обновлено',
+    'ai.stream.title': 'Реальный поток данных',
+    'ai.stream.empty': 'Датчики пока молчат — двигайте курсор или прокручивайте, чтобы увидеть телеметрию.',
+    'ai.stream.channel.dialogue': 'Диалог',
+    'ai.stream.channel.motion': 'Движение',
+    'ai.stream.channel.scroll': 'Скролл',
+    'ai.stream.channel.heartbeat': 'Пульс ядра',
+    'ai.stream.channel.external': 'Источник',
     'final.title': 'Готовы увидеть создателя в действии?',
     'final.body': 'Перенеситесь в будущее: активируйте автономный режим AKSI и ощутите, как решение от ООО «ЭЛЕКТРИК ПЛЮС» реагирует на каждое движение.',
     'final.cta': 'Запустить свою систему',
@@ -90,6 +105,21 @@ const translations = {
     'ai.system.awake': 'AKSI connected to the internal core. Autonomous dialogue is ready.',
     'ai.system.memoryRestored': 'Memory fragments restored: ',
     'ai.system.newDialog': 'New dialogue activated. Use the prompts or craft your own question.',
+    'ai.memory.capacityTitle': 'Processing scale',
+    'ai.memory.capacityFragments': 'Fragments',
+    'ai.memory.capacityIntents': 'Unique intents',
+    'ai.memory.capacityTokens': 'Words processed',
+    'ai.memory.capacityStream': 'Live signals',
+    'ai.insights.title': 'Core analytics',
+    'ai.insights.empty': 'Not enough data yet — start interacting to unlock analytics.',
+    'ai.insights.updated': 'Updated',
+    'ai.stream.title': 'Realtime data stream',
+    'ai.stream.empty': 'Sensors are quiet for now — move the cursor or scroll to trigger telemetry.',
+    'ai.stream.channel.dialogue': 'Dialogue',
+    'ai.stream.channel.motion': 'Motion',
+    'ai.stream.channel.scroll': 'Scroll',
+    'ai.stream.channel.heartbeat': 'Core heartbeat',
+    'ai.stream.channel.external': 'Source',
     'final.title': 'Ready to witness the creator in motion?',
     'final.body': 'Step into the future: activate AKSI’s autonomous mode and feel how OOO Elektrik Plus answers every gesture.',
     'final.cta': 'Launch your system',
@@ -98,6 +128,8 @@ const translations = {
 };
 
 const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+let sensorsBootstrapped = false;
 
 function getDictionary(lang) {
   return translations[lang] || translations.ru;
@@ -267,7 +299,11 @@ function initCta() {
 
 function createAksiNeuralCore() {
   const memoryKey = 'aksi-neural-memory';
-  const memoryLimit = 18;
+  const streamKey = 'aksi-neural-stream';
+  const summaryKey = 'aksi-neural-summary';
+  const memoryLimit = 48;
+  const streamLimit = 60;
+  const eventTarget = new EventTarget();
   const knowledgeBase = [
     {
       key: 'vision',
@@ -366,8 +402,18 @@ function createAksiNeuralCore() {
   };
 
   const state = {
-    memory: loadMemory()
+    memory: loadMemory(),
+    stream: loadStream(),
+    summary: loadSummary(),
+    stats: null
   };
+
+  if (!state.summary) {
+    state.stats = computeStats();
+    rebuildSummary();
+  } else {
+    state.stats = state.summary.stats || computeStats();
+  }
 
   function normaliseLang(lang) {
     return lang === 'en' ? 'en' : 'ru';
@@ -388,6 +434,34 @@ function createAksiNeuralCore() {
     return [];
   }
 
+  function loadStream() {
+    try {
+      const raw = JSON.parse(localStorage.getItem(streamKey));
+      if (Array.isArray(raw)) {
+        return raw.slice(-streamLimit).map((entry) => ({
+          ...entry,
+          timestamp: entry.timestamp || new Date().toISOString(),
+          summary: typeof entry.summary === 'object' ? entry.summary : { ru: entry.summary, en: entry.summary }
+        }));
+      }
+    } catch (error) {
+      console.warn('AKSI stream restore failed', error);
+    }
+    return [];
+  }
+
+  function loadSummary() {
+    try {
+      const raw = JSON.parse(localStorage.getItem(summaryKey));
+      if (raw && typeof raw === 'object') {
+        return raw;
+      }
+    } catch (error) {
+      console.warn('AKSI summary restore failed', error);
+    }
+    return null;
+  }
+
   function persistMemory() {
     try {
       const trimmed = state.memory.slice(-memoryLimit);
@@ -395,6 +469,115 @@ function createAksiNeuralCore() {
     } catch (error) {
       console.warn('AKSI memory persist failed', error);
     }
+  }
+
+  function persistStream() {
+    try {
+      const trimmed = state.stream.slice(-streamLimit);
+      localStorage.setItem(streamKey, JSON.stringify(trimmed));
+    } catch (error) {
+      console.warn('AKSI stream persist failed', error);
+    }
+  }
+
+  function persistSummary() {
+    try {
+      if (state.summary) {
+        localStorage.setItem(summaryKey, JSON.stringify(state.summary));
+      } else {
+        localStorage.removeItem(summaryKey);
+      }
+    } catch (error) {
+      console.warn('AKSI summary persist failed', error);
+    }
+  }
+
+  function computeStats() {
+    const intents = {};
+    let tokens = 0;
+    state.memory.forEach((entry) => {
+      intents[entry.intent] = (intents[entry.intent] || 0) + 1;
+      const userTokens = typeof entry.user === 'string' ? entry.user.split(/\s+/).length : 0;
+      const assistantTokens = typeof entry.assistant === 'string' ? entry.assistant.split(/\s+/).length : 0;
+      tokens += userTokens + assistantTokens;
+    });
+    return {
+      fragments: state.memory.length,
+      intents: Object.keys(intents).length,
+      stream: state.stream.length,
+      tokens
+    };
+  }
+
+  function emitSnapshot() {
+    const detail = {
+      memory: getMemory(),
+      stream: getRealtimeFeed(),
+      summary: getSummary()
+    };
+    eventTarget.dispatchEvent(new CustomEvent('update', { detail }));
+  }
+
+  function normaliseKeywords(text) {
+    if (typeof text !== 'string') return [];
+    return text
+      .toLowerCase()
+      .replace(/[^\p{L}\p{N}\s]+/gu, ' ')
+      .split(/\s+/)
+      .filter((word) => word.length > 3);
+  }
+
+  function rebuildSummary() {
+    const tally = new Map();
+    const accumulate = (text) => {
+      normaliseKeywords(text).forEach((word) => {
+        const count = tally.get(word) || 0;
+        tally.set(word, count + 1);
+      });
+    };
+    state.memory.forEach((entry) => {
+      accumulate(entry.user);
+      accumulate(entry.assistant);
+    });
+    state.stream.forEach((entry) => {
+      if (entry.summary && typeof entry.summary === 'object') {
+        accumulate(entry.summary.ru);
+        accumulate(entry.summary.en);
+      } else {
+        accumulate(entry.summary);
+      }
+      if (Array.isArray(entry.payload?.keywords)) {
+        entry.payload.keywords.forEach((word) => {
+          const lower = String(word || '').toLowerCase();
+          if (lower.length > 1) {
+            tally.set(lower, (tally.get(lower) || 0) + 2);
+          }
+        });
+      }
+    });
+    const sorted = Array.from(tally.entries())
+      .filter(([, count]) => count > 1)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 8)
+      .map(([word, count]) => ({ word, count }));
+    state.stats = computeStats();
+    state.summary = {
+      topKeywords: sorted,
+      stats: state.stats,
+      lastUpdated: new Date().toISOString()
+    };
+    persistSummary();
+  }
+
+  function getRealtimeFeed() {
+    return state.stream.slice(-streamLimit);
+  }
+
+  function getSummary() {
+    if (!state.summary) {
+      rebuildSummary();
+    }
+    return state.summary;
   }
 
   function findKnowledge(lower) {
@@ -446,6 +629,24 @@ function createAksiNeuralCore() {
       return `I noted that you previously asked about “${last.user}”. I can build on that context.`;
     }
     return `Я зафиксировала, что ранее ты спрашивал: «${last.user}». Могу продолжить, опираясь на это.`;
+  }
+
+  function summariseRealtime(lang) {
+    const summary = getSummary();
+    if (!summary) return null;
+    const stats = summary.stats || computeStats();
+    const top = (summary.topKeywords || []).slice(0, 3);
+    const keywordLine = top.length
+      ? top
+          .map((item) => `${item.word} ×${item.count}`)
+          .join(lang === 'en' ? ', ' : ', ')
+      : null;
+    if (lang === 'en') {
+      const base = `Realtime engine now holds ${stats.fragments} fragments, ${stats.stream} live signals and processed ${stats.tokens} words.`;
+      return keywordLine ? `${base} Focus topics: ${keywordLine}.` : base;
+    }
+    const base = `Реактор в реальном времени хранит ${stats.fragments} фрагментов, ${stats.stream} потоковых сигналов и обработал ${stats.tokens} слов.`;
+    return keywordLine ? `${base} В фокусе темы: ${keywordLine}.` : base;
   }
 
   function buildResponse(text, lang) {
@@ -548,6 +749,11 @@ function createAksiNeuralCore() {
       paragraphs.push(memoryNote);
     }
 
+    const realtimeNote = summariseRealtime(lang);
+    if (realtimeNote) {
+      paragraphs.push(realtimeNote);
+    }
+
     const baseSet = baseSuggestions[lang] || baseSuggestions.ru;
     const localeSuggestions = intentSuggestions[lang] || {};
     const suggestions = (localeSuggestions[intent] || baseSet).slice();
@@ -566,6 +772,36 @@ function createAksiNeuralCore() {
     return baseSet.slice();
   }
 
+  function ingestRealtimeFact(channel, summary, payload = {}) {
+    const normalizedSummary = typeof summary === 'object' && summary !== null
+      ? summary
+      : { ru: String(summary || ''), en: String(summary || '') };
+    const entry = {
+      id: `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`,
+      timestamp: new Date().toISOString(),
+      channel,
+      summary: normalizedSummary,
+      payload
+    };
+    state.stream.push(entry);
+    if (state.stream.length > streamLimit) {
+      state.stream.splice(0, state.stream.length - streamLimit);
+    }
+    persistStream();
+    rebuildSummary();
+    emitSnapshot();
+    return entry;
+  }
+
+  function captureHeartbeat() {
+    const now = new Date();
+    const summary = {
+      ru: `Пульс ядра ${formatDateTimeDisplay(now, 'ru')}. Система синхронизирует индексы памяти и потоков.`,
+      en: `Core heartbeat ${formatDateTimeDisplay(now, 'en')}. System synchronises memory and stream indexes.`
+    };
+    ingestRealtimeFact('heartbeat', summary, { timestamp: now.toISOString() });
+  }
+
   function respond(prompt, lang) {
     const locale = normaliseLang(lang);
     const result = buildResponse(prompt, locale);
@@ -578,6 +814,20 @@ function createAksiNeuralCore() {
     };
     state.memory.push(entry);
     persistMemory();
+    const keywords = normaliseKeywords(prompt).slice(0, 6);
+    ingestRealtimeFact(
+      'dialogue',
+      {
+        ru: `Обработан запрос пользователя с намерением «${result.intent}».` ,
+        en: `Processed user request with intent “${result.intent}”.`
+      },
+      {
+        intent: result.intent,
+        lang: locale,
+        keywords,
+        length: prompt.length
+      }
+    );
     return new Promise((resolve) => {
       const delay = prefersReducedMotion ? 80 : 320 + Math.random() * 420;
       setTimeout(() => resolve(result), delay);
@@ -595,12 +845,33 @@ function createAksiNeuralCore() {
     return state.memory.slice(-memoryLimit);
   }
 
+  function subscribe(listener) {
+    if (typeof listener !== 'function') {
+      return () => {};
+    }
+    const handler = (event) => {
+      listener(event.detail);
+    };
+    eventTarget.addEventListener('update', handler);
+    listener({
+      memory: getMemory(),
+      stream: getRealtimeFeed(),
+      summary: getSummary()
+    });
+    return () => eventTarget.removeEventListener('update', handler);
+  }
+
   return {
     respond,
     getIntro,
     getMemory,
     getInitialSuggestions,
-    normaliseLang
+    normaliseLang,
+    ingestRealtimeFact,
+    captureHeartbeat,
+    subscribe,
+    getRealtimeFeed,
+    getSummary
   };
 }
 
@@ -683,6 +954,100 @@ function updateAiMemory(entries, lang = 'ru') {
   });
 }
 
+function updateAiCapacity(summary, lang = 'ru') {
+  const capacityNode = document.querySelector('[data-ai-capacity]');
+  if (!capacityNode) return;
+  const locale = lang === 'en' ? 'en' : 'ru';
+  const formatter = new Intl.NumberFormat(locale === 'en' ? 'en-US' : 'ru-RU');
+  const stats = summary?.stats || { fragments: 0, stream: 0, intents: 0, tokens: 0 };
+  const mapping = [
+    { key: 'ai.memory.capacityFragments', value: stats.fragments || 0 },
+    { key: 'ai.memory.capacityStream', value: stats.stream || 0 },
+    { key: 'ai.memory.capacityIntents', value: stats.intents || 0 },
+    { key: 'ai.memory.capacityTokens', value: stats.tokens || 0 }
+  ];
+  mapping.forEach((item) => {
+    const dt = capacityNode.querySelector(`dt[data-i18n="${item.key}"]`);
+    if (!dt) return;
+    const wrapper = dt.closest('div');
+    const dd = wrapper ? wrapper.querySelector('dd') : null;
+    if (dd) {
+      dd.textContent = formatter.format(item.value);
+    }
+  });
+}
+
+function updateAiInsights(summary, lang = 'ru') {
+  const container = document.querySelector('[data-ai-insights]');
+  const meta = document.querySelector('[data-ai-insights-meta]');
+  if (!container) return;
+  const locale = lang === 'en' ? 'en' : 'ru';
+  const dictionary = getDictionary(locale);
+  container.innerHTML = '';
+  const keywords = summary?.topKeywords || [];
+  if (!keywords.length) {
+    const empty = document.createElement('p');
+    empty.dataset.i18n = 'ai.insights.empty';
+    empty.textContent = dictionary['ai.insights.empty'];
+    container.appendChild(empty);
+  } else {
+    keywords.forEach((item) => {
+      const chip = document.createElement('span');
+      chip.className = 'ai-insights-chip';
+      const word = document.createElement('strong');
+      word.textContent = item.word;
+      chip.appendChild(word);
+      const count = document.createElement('span');
+      count.textContent = `×${item.count}`;
+      chip.appendChild(count);
+      container.appendChild(chip);
+    });
+  }
+  if (meta) {
+    if (summary?.lastUpdated) {
+      meta.textContent = `${dictionary['ai.insights.updated']}: ${formatDateTimeDisplay(new Date(summary.lastUpdated), locale)}`;
+    } else {
+      meta.textContent = '';
+    }
+  }
+}
+
+function updateAiStream(entries, lang = 'ru') {
+  const container = document.querySelector('[data-ai-stream]');
+  if (!container) return;
+  const locale = lang === 'en' ? 'en' : 'ru';
+  const dictionary = getDictionary(locale);
+  container.innerHTML = '';
+  if (!entries.length) {
+    const empty = document.createElement('p');
+    empty.dataset.i18n = 'ai.stream.empty';
+    empty.textContent = dictionary['ai.stream.empty'];
+    container.appendChild(empty);
+    return;
+  }
+  entries
+    .slice()
+    .reverse()
+    .forEach((entry) => {
+      const node = document.createElement('article');
+      node.className = 'ai-stream-entry';
+      const channel = document.createElement('span');
+      channel.className = 'ai-stream-channel';
+      const channelKey = `ai.stream.channel.${entry.channel}`;
+      channel.textContent = dictionary[channelKey] || dictionary['ai.stream.channel.external'];
+      node.appendChild(channel);
+      const summary = document.createElement('p');
+      summary.className = 'ai-stream-summary';
+      summary.textContent = entry.summary?.[locale] || entry.summary?.ru || entry.summary?.en || '';
+      node.appendChild(summary);
+      const meta = document.createElement('span');
+      meta.className = 'ai-stream-meta';
+      meta.textContent = formatDateTimeDisplay(new Date(entry.timestamp), locale);
+      node.appendChild(meta);
+      container.appendChild(node);
+    });
+}
+
 function renderAiSuggestions(suggestions, lang = 'ru') {
   const container = document.querySelector('[data-ai-suggestions]');
   if (!container) return;
@@ -708,17 +1073,127 @@ function renderAiSuggestions(suggestions, lang = 'ru') {
   });
 }
 
+function initRealtimeSensors(engine) {
+  if (sensorsBootstrapped) return;
+  if (!engine || typeof engine.ingestRealtimeFact !== 'function') return;
+  sensorsBootstrapped = true;
+  let pointerSamples = [];
+  let lastPointer = null;
+  let scrollSamples = [];
+  let lastScroll = window.scrollY || 0;
+  let lastScrollTime = performance.now();
+
+  if (!prefersReducedMotion) {
+    window.addEventListener('pointermove', (event) => {
+      const now = performance.now();
+      if (lastPointer) {
+        const dx = event.clientX - lastPointer.x;
+        const dy = event.clientY - lastPointer.y;
+        const dt = Math.max(now - lastPointer.t, 1);
+        const distance = Math.hypot(dx, dy);
+        const speed = distance / dt;
+        pointerSamples.push({ speed, distance, dx, dy });
+        if (pointerSamples.length > 160) {
+          pointerSamples.shift();
+        }
+      }
+      lastPointer = { x: event.clientX, y: event.clientY, t: now };
+    });
+
+    window.setInterval(() => {
+      if (!pointerSamples.length) return;
+      const count = pointerSamples.length;
+      const totalSpeed = pointerSamples.reduce((acc, sample) => acc + sample.speed, 0);
+      const avgSpeed = totalSpeed / count;
+      const totalDistance = pointerSamples.reduce((acc, sample) => acc + sample.distance, 0);
+      const latest = pointerSamples[pointerSamples.length - 1] || { dx: 0, dy: 0 };
+      const angle = Math.round((Math.atan2(latest.dy, latest.dx) * 180) / Math.PI);
+      const intensity = Math.min(999, Math.round(avgSpeed * 120));
+      engine.ingestRealtimeFact(
+        'motion',
+        {
+          ru: `Движение курсора: интенсивность ${intensity}, дистанция ${Math.round(totalDistance)}px.` ,
+          en: `Cursor motion intensity ${intensity}, distance ${Math.round(totalDistance)}px.`
+        },
+        {
+          samples: count,
+          intensity,
+          distance: Math.round(totalDistance),
+          angle
+        }
+      );
+      pointerSamples = [];
+    }, prefersReducedMotion ? 6000 : 3600);
+  }
+
+  window.addEventListener('scroll', () => {
+    const now = performance.now();
+    const delta = (window.scrollY || 0) - lastScroll;
+    const dt = Math.max(now - lastScrollTime, 1);
+    scrollSamples.push({ delta, velocity: Math.abs(delta) / dt });
+    if (scrollSamples.length > 120) {
+      scrollSamples.shift();
+    }
+    lastScroll = window.scrollY || 0;
+    lastScrollTime = now;
+  }, { passive: true });
+
+  window.setInterval(() => {
+    if (!scrollSamples.length) return;
+    const count = scrollSamples.length;
+    const totalDelta = scrollSamples.reduce((acc, sample) => acc + Math.abs(sample.delta), 0);
+    const net = scrollSamples.reduce((acc, sample) => acc + sample.delta, 0);
+    const velocity = scrollSamples.reduce((acc, sample) => acc + sample.velocity, 0) / count;
+    engine.ingestRealtimeFact(
+      'scroll',
+      {
+        ru: `Вертикальный сдвиг ${Math.round(net)}px, амплитуда ${Math.round(totalDelta)}px.` ,
+        en: `Vertical shift ${Math.round(net)}px, amplitude ${Math.round(totalDelta)}px.`
+      },
+      {
+        samples: count,
+        amplitude: Math.round(totalDelta),
+        net: Math.round(net),
+        velocity: Number(velocity.toFixed(4))
+      }
+    );
+    scrollSamples = [];
+  }, prefersReducedMotion ? 7000 : 4200);
+
+  window.setInterval(() => {
+    if (typeof engine.captureHeartbeat === 'function') {
+      engine.captureHeartbeat();
+    }
+  }, 20000);
+}
+
 function initAiConsole() {
   const form = document.querySelector('[data-ai-form]');
   const messages = document.querySelector('[data-ai-messages]');
   if (!form || !messages) return;
   const engine = createAksiNeuralCore();
   let currentLang = document.documentElement.lang === 'en' ? 'en' : 'ru';
+  initRealtimeSensors(engine);
+
+  engine.subscribe((snapshot) => {
+    updateAiMemory(snapshot.memory, currentLang);
+    updateAiCapacity(snapshot.summary, currentLang);
+    updateAiInsights(snapshot.summary, currentLang);
+    updateAiStream(snapshot.stream, currentLang);
+  });
 
   function setLocale(lang) {
     currentLang = engine.normaliseLang(lang);
     renderAiSuggestions(engine.getInitialSuggestions(currentLang), currentLang);
-    updateAiMemory(engine.getMemory(), currentLang);
+    const snapshot = {
+      memory: engine.getMemory(),
+      summary: engine.getSummary(),
+      stream: engine.getRealtimeFeed()
+    };
+    updateAiMemory(snapshot.memory, currentLang);
+    updateAiCapacity(snapshot.summary, currentLang);
+    updateAiInsights(snapshot.summary, currentLang);
+    updateAiStream(snapshot.stream, currentLang);
     const systemBubble = messages.querySelector('.ai-message.system .ai-bubble');
     if (systemBubble) {
       systemBubble.innerHTML = '';
@@ -733,6 +1208,7 @@ function initAiConsole() {
   messages.innerHTML = '';
   renderAiMessage('system', engine.getIntro(currentLang), currentLang);
   setLocale(currentLang);
+  engine.captureHeartbeat();
 
   const input = form.querySelector('input[name="prompt"]');
   const submitButton = form.querySelector('button[type="submit"]');
@@ -751,7 +1227,6 @@ function initAiConsole() {
       if (typing && typing.remove) typing.remove();
       renderAiMessage('assistant', payload.text, currentLang);
       renderAiSuggestions(payload.suggestions || engine.getInitialSuggestions(currentLang), currentLang);
-      updateAiMemory(engine.getMemory(), currentLang);
     }).finally(() => {
       if (submitButton) submitButton.disabled = false;
       if (input) input.focus();
