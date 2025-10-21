@@ -1,5 +1,6 @@
 const translations = {
   ru: {
+    'nav.love': 'AKSI LOVE',
     'nav.vision': 'Видение',
     'nav.capabilities': 'Возможности',
     'nav.hypernet': 'Гиперсеть',
@@ -9,6 +10,41 @@ const translations = {
     'hero.lead': 'AKSI — центральный разум новой эры. Мы создали 3D-пространство, которое реагирует на движение мыши, переворачивается при скролле и раскрывает глубину технологии без подключений к API.',
     'hero.cta': 'Запустить свою систему',
     'hero.secondary': 'Демонстрационный режим работает мгновенно — ваш личный ИИ уже ожил.',
+    'love.badge': 'Широкоформатный режим',
+    'love.title': 'AKSI LOVE — расширенная сцена синхронизации',
+    'love.body': 'Широкий экран запускает эмоциональную сцену, где AKSI и посетитель встречаются в одной волне. Визуальные пластины реагируют на курсор, а нейронное ядро отвечает прямо внутри сайта.',
+    'love.stage.title': 'Широкий запуск',
+    'love.stage.subtitle': 'Панели собираются вокруг твоего движения',
+    'love.panel1.title': 'Реактивная сцена',
+    'love.panel1.body': 'Объёмные прямоугольники изгибаются, вращаются и подсвечиваются неоном, когда ты ведёшь курсор по пространству.',
+    'love.panel2.title': 'Интеграция ядра',
+    'love.panel2.body': 'AKSI LOVE подключается к нейронному ядру и делится общей памятью с консолью, сохраняя контекст каждого сигнала.',
+    'love.panel3.title': 'Эмоциональная память',
+    'love.panel3.body': 'Локальная память фиксирует эмоции и намерения в реальном времени, формируя хронику взаимодействия.',
+    'love.panel4.title': 'Готовность к действию',
+    'love.panel4.body': 'Нажми запуск — широкая консоль откроет диалог и подготовит сценарии без серверов и API.',
+    'love.launch': 'Запустить AKSI LOVE',
+    'love.note': 'Режим раскроется во всю ширину и соединит сцену с внутренним интеллектом.',
+    'love.overlay.title': 'Консоль AKSI LOVE',
+    'love.overlay.body': 'Широкоформатная консоль собирает визуальные сигналы и ответы ядра, чтобы показать, как AKSI ведёт диалог без внешних API.',
+    'love.overlay.point1': 'Все ответы генерируются локально и синхронизируются с памятью основного ядра.',
+    'love.overlay.point2': 'Панели HyperNet и консоли делятся контекстом — подсказки обновляются мгновенно.',
+    'love.overlay.point3': 'Режим реагирует на движение мыши и скролл, создавая глубину даже на статичном экране.',
+    'love.overlay.console': 'Интерактивное ядро',
+    'love.overlay.statusLabel': 'Статус',
+    'love.overlay.hint': 'Поделись идеей или настроением — AKSI LOVE превратит их в сценарии будущего.',
+    'love.overlay.empty': 'Ожидание широкого импульса…',
+    'love.overlay.suggestions': 'Попробуйте также',
+    'love.overlay.label': 'Сообщение для AKSI LOVE',
+    'love.overlay.placeholder': 'Опиши ощущение или задачу…',
+    'love.overlay.send': 'Отправить сигнал',
+    'love.overlay.close': 'Закрыть режим AKSI LOVE',
+    'love.overlay.status.idle': 'Готова к импульсу',
+    'love.overlay.status.sync': 'Синхронизация сцены…',
+    'love.overlay.status.answer': 'Генерация ответа…',
+    'love.overlay.welcome': 'AKSI LOVE активирует сцену и подключает совместную память. Наблюдай, как ответ рождается внутри страницы.',
+    'love.overlay.autoprompt': 'Синхронизируй широкую сцену AKSI LOVE с эмоциями пользователя и предложи шаги для совместного запуска.',
+    'love.overlay.fallback': 'Режим работает автономно: представь, что сцена откликается на тебя и задаёт тон будущему.',
     'vision.title': 'Новая эра технологий',
     'vision.body': 'ООО «ЭЛЕКТРИК ПЛЮС» объединяет визуальные слои, память и эмоциональную логику, чтобы показать, как будет ощущаться интерфейс будущего. Без серверов и подписок — только чистое взаимодействие.',
     'vision.card1.title': 'Глубокое пространство',
@@ -98,6 +134,7 @@ const translations = {
     'footer': 'AKSI — ООО «ЭЛЕКТРИК ПЛЮС» создатель © 2046 — будущее развёрнуто сегодня.'
   },
   en: {
+    'nav.love': 'AKSI LOVE',
     'nav.vision': 'Vision',
     'nav.capabilities': 'Capabilities',
     'nav.hypernet': 'HyperNet',
@@ -107,6 +144,41 @@ const translations = {
     'hero.lead': 'AKSI is the central mind of a new era. A 3D universe reacts to your cursor, flips with scroll and reveals technology depth without any API connections.',
     'hero.cta': 'Launch your system',
     'hero.secondary': 'The demo runs instantly — your personal AI is already alive.',
+    'love.badge': 'Wide-format mode',
+    'love.title': 'AKSI LOVE — expansive sync stage',
+    'love.body': 'A panoramic launch pad where AKSI and the visitor meet on the same wavelength. Reactive plates follow your cursor while the neural core replies directly inside the site.',
+    'love.stage.title': 'Wide launch',
+    'love.stage.subtitle': 'Panels orbit around your motion',
+    'love.panel1.title': 'Reactive stage',
+    'love.panel1.body': 'Volumetric rectangles bend, spin and ignite gradients as you glide across the space.',
+    'love.panel2.title': 'Core integration',
+    'love.panel2.body': 'AKSI LOVE links to the neural core and shares memory with the console, preserving every signal.',
+    'love.panel3.title': 'Emotional memory',
+    'love.panel3.body': 'Local memory captures emotions and intents in real time, building a living chronicle.',
+    'love.panel4.title': 'Ready for action',
+    'love.panel4.body': 'Press launch — the panoramic console opens a dialogue and prepares action arcs without servers.',
+    'love.launch': 'Launch AKSI LOVE',
+    'love.note': 'The mode expands to full width and binds the stage to the internal intelligence.',
+    'love.overlay.title': 'AKSI LOVE Console',
+    'love.overlay.body': 'The widescreen console fuses visual signals and core replies to show how AKSI converses without external APIs.',
+    'love.overlay.point1': 'All answers are generated locally and synchronised with the primary memory.',
+    'love.overlay.point2': 'HyperNet and console share context, so prompts refresh instantly.',
+    'love.overlay.point3': 'The mode reacts to pointer movement and scroll, creating depth even on a static display.',
+    'love.overlay.console': 'Interactive core',
+    'love.overlay.statusLabel': 'Status',
+    'love.overlay.hint': 'Share an idea or a feeling — AKSI LOVE will transform it into suggestions and action steps.',
+    'love.overlay.empty': 'Awaiting the wide impulse…',
+    'love.overlay.suggestions': 'Try also',
+    'love.overlay.label': 'Message for AKSI LOVE',
+    'love.overlay.placeholder': 'Describe a feeling or task…',
+    'love.overlay.send': 'Send signal',
+    'love.overlay.close': 'Close AKSI LOVE mode',
+    'love.overlay.status.idle': 'Ready for impulse',
+    'love.overlay.status.sync': 'Synchronising the stage…',
+    'love.overlay.status.answer': 'Generating response…',
+    'love.overlay.welcome': 'AKSI LOVE activates the stage and plugs into shared memory. Watch the answer emerge inside the page.',
+    'love.overlay.autoprompt': 'Synchronise the AKSI LOVE widescreen stage with the visitor’s emotion and suggest steps for a joint launch.',
+    'love.overlay.fallback': 'The mode runs autonomously: imagine the scene reacting to you and setting the tone for the future.',
     'vision.title': 'A new technological age',
     'vision.body': 'OOO Elektrik Plus fuses visual layers, memory and emotional logic to show how interfaces of tomorrow will feel. No servers or subscriptions — just pure interaction.',
     'vision.card1.title': 'Deep space',
@@ -355,7 +427,11 @@ function initCta() {
     button.addEventListener('click', () => {
       button.classList.add('cta-activated');
       setTimeout(() => button.classList.remove('cta-activated'), 900);
-      const target = document.querySelector('#hypernet') || document.querySelector('#console') || document.querySelector('#timeline');
+      const target =
+        document.querySelector('#love') ||
+        document.querySelector('#hypernet') ||
+        document.querySelector('#console') ||
+        document.querySelector('#timeline');
       if (target) {
         target.scrollIntoView({ behavior: prefersReducedMotion ? 'auto' : 'smooth', block: 'start' });
       }
@@ -1869,6 +1945,305 @@ function initAiConsole() {
   return engine;
 }
 
+function initAksiLove(engine) {
+  const stage = document.querySelector('[data-love-stage]');
+  const overlay = document.querySelector('[data-love-overlay]');
+  const launchers = Array.from(document.querySelectorAll('[data-love-launch]'));
+  if (!stage && !overlay && !launchers.length) return;
+
+  const planes = stage ? Array.from(stage.querySelectorAll('.love-plane')) : [];
+  const closeTargets = overlay ? Array.from(overlay.querySelectorAll('[data-love-close]')) : [];
+  const logNode = overlay ? overlay.querySelector('[data-love-log]') : null;
+  const statusNode = overlay ? overlay.querySelector('[data-love-status]') : null;
+  const suggestionsNode = overlay ? overlay.querySelector('[data-love-suggestions]') : null;
+  const form = overlay ? overlay.querySelector('[data-love-form]') : null;
+  const input = form ? form.querySelector('input[name="prompt"]') : null;
+  const submitButton = form ? form.querySelector('button[type="submit"]') : null;
+
+  let currentLang = document.documentElement.lang === 'en' ? 'en' : 'ru';
+  let statusKey = 'idle';
+  let overlayVisible = false;
+  let typingNode = null;
+
+  function getDictionaryForCurrentLang() {
+    return getDictionary(currentLang);
+  }
+
+  function setStatus(key) {
+    statusKey = key;
+    if (!statusNode) return;
+    const dictionary = getDictionaryForCurrentLang();
+    statusNode.textContent = dictionary[`love.overlay.status.${key}`] || '';
+  }
+
+  function clearTyping() {
+    if (typingNode && typingNode.remove) {
+      typingNode.remove();
+    }
+    typingNode = null;
+  }
+
+  function showTyping() {
+    if (!logNode) return null;
+    const node = document.createElement('div');
+    node.className = 'love-log-typing';
+    node.textContent = '…';
+    logNode.appendChild(node);
+    logNode.scrollTop = logNode.scrollHeight;
+    return node;
+  }
+
+  function appendLog(role, text) {
+    if (!logNode) return;
+    const entry = document.createElement('div');
+    entry.className = `love-log-entry ${role}`;
+    String(text || '')
+      .split('\n\n')
+      .forEach((block) => {
+        if (!block) return;
+        const paragraph = document.createElement('p');
+        const lines = block.split('\n');
+        lines.forEach((line, index) => {
+          paragraph.appendChild(document.createTextNode(line));
+          if (index < lines.length - 1) {
+            paragraph.appendChild(document.createElement('br'));
+          }
+        });
+        entry.appendChild(paragraph);
+      });
+    logNode.appendChild(entry);
+    logNode.scrollTop = logNode.scrollHeight;
+  }
+
+  function renderLoveSuggestions(suggestions) {
+    if (!suggestionsNode) return;
+    suggestionsNode.innerHTML = '';
+    if (!Array.isArray(suggestions) || !suggestions.length) {
+      return;
+    }
+    suggestions.slice(0, 4).forEach((hint) => {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'love-suggestion';
+      button.textContent = hint;
+      button.addEventListener('click', () => {
+        if (!form || !input) return;
+        input.value = hint;
+        if (typeof form.requestSubmit === 'function') {
+          form.requestSubmit();
+        } else {
+          form.dispatchEvent(new Event('submit', { cancelable: true }));
+        }
+      });
+      suggestionsNode.appendChild(button);
+    });
+  }
+
+  function runLaunchSequence() {
+    if (logNode) {
+      logNode.innerHTML = '';
+    }
+    const dictionary = getDictionaryForCurrentLang();
+    appendLog('system', dictionary['love.overlay.welcome']);
+    renderLoveSuggestions(
+      engine && typeof engine.getInitialSuggestions === 'function'
+        ? engine.getInitialSuggestions(currentLang)
+        : null
+    );
+    setStatus('sync');
+    if (engine && typeof engine.respond === 'function') {
+      const prompt = dictionary['love.overlay.autoprompt'];
+      appendLog('user', prompt);
+      typingNode = showTyping();
+      setStatus('answer');
+      if (submitButton) submitButton.disabled = true;
+      engine.respond(prompt, currentLang)
+        .then((payload) => {
+          clearTyping();
+          appendLog('assistant', payload?.text || '');
+          renderLoveSuggestions(
+            Array.isArray(payload?.suggestions) && payload.suggestions.length
+              ? payload.suggestions
+              : engine.getInitialSuggestions(currentLang)
+          );
+        })
+        .catch(() => {
+          clearTyping();
+          appendLog('assistant', dictionary['love.overlay.fallback']);
+        })
+        .finally(() => {
+          setStatus('idle');
+          if (submitButton) submitButton.disabled = false;
+        });
+    } else {
+      appendLog('assistant', dictionary['love.overlay.fallback']);
+      setStatus('idle');
+    }
+  }
+
+  function openOverlay() {
+    if (!overlay) return;
+    overlay.classList.add('is-visible');
+    overlay.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('love-overlay-open');
+    overlayVisible = true;
+    runLaunchSequence();
+    if (input) {
+      setTimeout(() => input.focus(), prefersReducedMotion ? 0 : 300);
+    }
+  }
+
+  function closeOverlay() {
+    if (!overlay) return;
+    overlay.classList.remove('is-visible');
+    overlay.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('love-overlay-open');
+    overlayVisible = false;
+    clearTyping();
+  }
+
+  function updateLocale(lang) {
+    currentLang = lang === 'en' ? 'en' : 'ru';
+    const dictionary = getDictionaryForCurrentLang();
+    if (input && dictionary['love.overlay.placeholder']) {
+      input.setAttribute('placeholder', dictionary['love.overlay.placeholder']);
+    }
+    setStatus(statusKey);
+    if (!overlayVisible) {
+      renderLoveSuggestions(
+        engine && typeof engine.getInitialSuggestions === 'function'
+          ? engine.getInitialSuggestions(currentLang)
+          : null
+      );
+    }
+  }
+
+  if (form) {
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      if (!input) return;
+      const value = input.value.trim();
+      if (!value) return;
+      const dictionary = getDictionaryForCurrentLang();
+      appendLog('user', value);
+      input.value = '';
+      if (!(engine && typeof engine.respond === 'function')) {
+        appendLog('assistant', dictionary['love.overlay.fallback']);
+        setStatus('idle');
+        return;
+      }
+      const typing = showTyping();
+      setStatus('answer');
+      if (submitButton) submitButton.disabled = true;
+      engine.respond(value, currentLang)
+        .then((payload) => {
+          if (typing && typing.remove) typing.remove();
+          appendLog('assistant', payload?.text || '');
+          renderLoveSuggestions(
+            Array.isArray(payload?.suggestions) && payload.suggestions.length
+              ? payload.suggestions
+              : engine.getInitialSuggestions(currentLang)
+          );
+        })
+        .catch(() => {
+          if (typing && typing.remove) typing.remove();
+          appendLog('assistant', dictionary['love.overlay.fallback']);
+        })
+        .finally(() => {
+          setStatus('idle');
+          if (submitButton) submitButton.disabled = false;
+          if (input) input.focus();
+        });
+    });
+  }
+
+  launchers.forEach((button) => {
+    button.addEventListener('click', () => {
+      openOverlay();
+    });
+  });
+
+  closeTargets.forEach((node) => {
+    node.addEventListener('click', () => {
+      closeOverlay();
+    });
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && overlayVisible) {
+      event.preventDefault();
+      closeOverlay();
+    }
+  });
+
+  if (stage) {
+    const applyParallax = (x, y) => {
+      const rect = stage.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+      const normX = rect.width ? (x - centerX) / rect.width : 0;
+      const normY = rect.height ? (y - centerY) / rect.height : 0;
+      planes.forEach((plane) => {
+        const depth = parseFloat(plane.dataset.depth || '1');
+        const offsetX = normX * 160 * depth;
+        const offsetY = normY * -140 * depth;
+        const rotateZ = normX * 22 * depth;
+        plane.style.setProperty('--offsetX', `${offsetX}px`);
+        plane.style.setProperty('--offsetY', `${offsetY}px`);
+        plane.style.setProperty('--rotateZ', `${rotateZ}deg`);
+      });
+      stage.style.setProperty('--glowX', `${normX * 40}px`);
+      stage.style.setProperty('--glowY', `${normY * -40}px`);
+    };
+
+    const updateScroll = () => {
+      const rect = stage.getBoundingClientRect();
+      const viewport = window.innerHeight || document.documentElement.clientHeight || 1;
+      const progress = Math.max(0, Math.min(1, 1 - (rect.top + rect.height) / (viewport + rect.height)));
+      stage.style.setProperty('--scrollProgress', progress.toFixed(3));
+      planes.forEach((plane, index) => {
+        const depth = parseFloat(plane.dataset.depth || '1');
+        const rotateX = (progress * 60 - 30) * depth + index * 3;
+        plane.style.setProperty('--rotateX', `${rotateX}deg`);
+      });
+    };
+
+    if (!prefersReducedMotion) {
+      stage.addEventListener('pointermove', (event) => {
+        applyParallax(event.clientX, event.clientY);
+      });
+      stage.addEventListener('pointerleave', () => {
+        applyParallax(window.innerWidth / 2, window.innerHeight / 2);
+      });
+      window.addEventListener('scroll', () => {
+        window.requestAnimationFrame(updateScroll);
+      });
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        stage.classList.toggle('is-active', entry.isIntersecting);
+      });
+    }, { threshold: 0.28 });
+    observer.observe(stage);
+
+    applyParallax(window.innerWidth / 2, window.innerHeight / 2);
+    updateScroll();
+  }
+
+  document.addEventListener('aksi:language-changed', (event) => {
+    const lang = event.detail?.lang;
+    if (!lang) return;
+    updateLocale(lang);
+    if (overlayVisible) {
+      runLaunchSequence();
+    }
+  });
+
+  updateLocale(currentLang);
+  setStatus('idle');
+}
+
 function initHyperNet(engine) {
   const form = document.querySelector('[data-hypernet-form]');
   const queryInput = form ? form.querySelector('[data-hypernet-query]') : null;
@@ -2118,6 +2493,7 @@ function boot() {
   initScrollDepth();
   initCta();
   const engine = initAiConsole();
+  initAksiLove(engine);
   initHyperNet(engine);
 }
 

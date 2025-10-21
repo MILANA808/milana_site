@@ -22,6 +22,7 @@
     <header class="top-bar" data-tilt="0.5">
         <div class="brand">ООО ЭЛЕКТРИК ПЛЮС</div>
         <nav class="main-nav" aria-label="Главная навигация">
+            <a href="#love" data-i18n="nav.love"></a>
             <a href="#vision" data-i18n="nav.vision"></a>
             <a href="#capabilities" data-i18n="nav.capabilities"></a>
             <a href="#hypernet" data-i18n="nav.hypernet"></a>
@@ -59,6 +60,49 @@
                 <div class="abstract-shape" data-depth="1.1"></div>
                 <div class="abstract-shape" data-depth="1.4"></div>
             </div>
+        </section>
+
+        <section id="love" class="section love" data-tilt="1.25">
+            <header class="love-header">
+                <span class="love-badge" data-i18n="love.badge"></span>
+                <h2 data-i18n="love.title"></h2>
+                <p data-i18n="love.body"></p>
+            </header>
+            <div class="love-content">
+                <div class="love-stage" data-love-stage>
+                    <div class="love-plane love-plane--primary" data-depth="1.2"></div>
+                    <div class="love-plane love-plane--secondary" data-depth="0.7"></div>
+                    <div class="love-plane love-plane--tertiary" data-depth="1.5"></div>
+                    <div class="love-plane love-plane--quaternary" data-depth="0.5"></div>
+                    <div class="love-vignette"></div>
+                    <div class="love-caption">
+                        <strong data-i18n="love.stage.title"></strong>
+                        <span data-i18n="love.stage.subtitle"></span>
+                    </div>
+                </div>
+                <div class="love-panels">
+                    <article class="love-panel" data-tilt="1.4">
+                        <h3 data-i18n="love.panel1.title"></h3>
+                        <p data-i18n="love.panel1.body"></p>
+                    </article>
+                    <article class="love-panel" data-tilt="1.3">
+                        <h3 data-i18n="love.panel2.title"></h3>
+                        <p data-i18n="love.panel2.body"></p>
+                    </article>
+                    <article class="love-panel" data-tilt="1.2">
+                        <h3 data-i18n="love.panel3.title"></h3>
+                        <p data-i18n="love.panel3.body"></p>
+                    </article>
+                    <article class="love-panel" data-tilt="1.1">
+                        <h3 data-i18n="love.panel4.title"></h3>
+                        <p data-i18n="love.panel4.body"></p>
+                    </article>
+                </div>
+            </div>
+            <footer class="love-footer">
+                <button type="button" class="love-launch" data-love-launch data-i18n="love.launch"></button>
+                <p class="love-note" data-i18n="love.note"></p>
+            </footer>
         </section>
 
         <section id="vision" class="section glass" data-tilt="0.9">
@@ -261,6 +305,50 @@
             <button class="cta-button" data-i18n="final.cta"></button>
         </section>
     </main>
+
+    <div class="love-overlay" data-love-overlay aria-hidden="true">
+        <div class="love-overlay-backdrop" data-love-close></div>
+        <div class="love-overlay-frame" role="dialog" aria-modal="true" aria-labelledby="love-overlay-title">
+            <button type="button" class="love-overlay-close" data-love-close data-i18n-aria="love.overlay.close">
+                <span aria-hidden="true">×</span>
+            </button>
+            <div class="love-overlay-columns">
+                <section class="love-overlay-vision">
+                    <h3 id="love-overlay-title" data-i18n="love.overlay.title"></h3>
+                    <p data-i18n="love.overlay.body"></p>
+                    <ul class="love-overlay-points">
+                        <li data-i18n="love.overlay.point1"></li>
+                        <li data-i18n="love.overlay.point2"></li>
+                        <li data-i18n="love.overlay.point3"></li>
+                    </ul>
+                </section>
+                <section class="love-overlay-console">
+                    <header class="love-console-header">
+                        <div>
+                            <h4 data-i18n="love.overlay.console"></h4>
+                            <span class="love-console-status">
+                                <strong data-i18n="love.overlay.statusLabel"></strong>
+                                <span data-love-status></span>
+                            </span>
+                        </div>
+                        <p class="love-console-hint" data-i18n="love.overlay.hint"></p>
+                    </header>
+                    <div class="love-console-log" data-love-log>
+                        <p data-i18n="love.overlay.empty"></p>
+                    </div>
+                    <div class="love-console-suggestions">
+                        <span class="love-console-suggestions-title" data-i18n="love.overlay.suggestions"></span>
+                        <div class="love-console-suggestions-list" data-love-suggestions></div>
+                    </div>
+                    <form class="love-console-form" data-love-form>
+                        <label class="sr-only" for="love-prompt" data-i18n="love.overlay.label"></label>
+                        <input id="love-prompt" name="prompt" type="text" autocomplete="off" data-i18n-placeholder="love.overlay.placeholder">
+                        <button type="submit" data-i18n="love.overlay.send"></button>
+                    </form>
+                </section>
+            </div>
+        </div>
+    </div>
 
     <footer class="footer" data-tilt="0.6">
         <p data-i18n="footer"></p>
