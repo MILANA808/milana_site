@@ -24,6 +24,7 @@
         <nav class="main-nav" aria-label="Главная навигация">
             <a href="#vision" data-i18n="nav.vision"></a>
             <a href="#capabilities" data-i18n="nav.capabilities"></a>
+            <a href="#hypernet" data-i18n="nav.hypernet"></a>
             <a href="#timeline" data-i18n="nav.timeline"></a>
             <a href="#console" data-i18n="nav.console"></a>
         </nav>
@@ -102,6 +103,70 @@
                     <h3 data-i18n="capability.three.title"></h3>
                     <p data-i18n="capability.three.body"></p>
                 </article>
+            </div>
+        </section>
+
+        <section id="hypernet" class="section hypernet" data-tilt="1.05">
+            <header class="hypernet-header">
+                <div>
+                    <h2 data-i18n="hypernet.title"></h2>
+                    <p data-i18n="hypernet.subtitle"></p>
+                </div>
+                <div class="hypernet-status" data-hypernet-status>
+                    <span class="status-dot"></span>
+                    <strong data-i18n="hypernet.status.idle"></strong>
+                </div>
+            </header>
+            <div class="hypernet-layout">
+                <div class="hypernet-search glass" data-tilt="1.2">
+                    <form class="hypernet-form" data-hypernet-form>
+                        <label class="sr-only" for="hypernet-query" data-i18n="hypernet.search.label"></label>
+                        <div class="hypernet-form-row">
+                            <input id="hypernet-query" name="query" type="text" autocomplete="off" data-hypernet-query
+                                   data-i18n-placeholder="hypernet.search.placeholder">
+                            <button type="submit" class="hypernet-submit" data-i18n="hypernet.search.submit"></button>
+                        </div>
+                        <fieldset class="hypernet-filters">
+                            <legend data-i18n="hypernet.filters.title"></legend>
+                            <label>
+                                <input type="checkbox" value="trends" data-hypernet-filter>
+                                <span data-i18n="hypernet.filters.trends"></span>
+                            </label>
+                            <label>
+                                <input type="checkbox" value="infrastructure" data-hypernet-filter>
+                                <span data-i18n="hypernet.filters.infrastructure"></span>
+                            </label>
+                            <label>
+                                <input type="checkbox" value="markets" data-hypernet-filter>
+                                <span data-i18n="hypernet.filters.markets"></span>
+                            </label>
+                            <label>
+                                <input type="checkbox" value="culture" data-hypernet-filter>
+                                <span data-i18n="hypernet.filters.culture"></span>
+                            </label>
+                            <label>
+                                <input type="checkbox" value="research" data-hypernet-filter>
+                                <span data-i18n="hypernet.filters.research"></span>
+                            </label>
+                        </fieldset>
+                    </form>
+                    <div class="hypernet-summary" data-hypernet-summary></div>
+                    <div class="hypernet-results" data-hypernet-results>
+                        <p data-i18n="hypernet.results.empty"></p>
+                    </div>
+                </div>
+                <aside class="hypernet-actions glass" data-tilt="0.9">
+                    <h3 data-i18n="hypernet.actions.title"></h3>
+                    <p class="hypernet-actions-subtitle" data-i18n="hypernet.actions.subtitle"></p>
+                    <div class="hypernet-actions-list" data-hypernet-actions></div>
+                    <button type="button" class="hypernet-run" data-hypernet-run data-i18n="hypernet.actions.run"></button>
+                    <div class="hypernet-log">
+                        <h4 data-i18n="hypernet.log.title"></h4>
+                        <div class="hypernet-log-body" data-hypernet-log>
+                            <p data-i18n="hypernet.log.empty"></p>
+                        </div>
+                    </div>
+                </aside>
             </div>
         </section>
 

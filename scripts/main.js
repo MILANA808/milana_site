@@ -2,6 +2,7 @@ const translations = {
   ru: {
     'nav.vision': 'Видение',
     'nav.capabilities': 'Возможности',
+    'nav.hypernet': 'Гиперсеть',
     'nav.timeline': 'Путь запуска',
     'nav.console': 'Консоль ИИ',
     'hero.tagline': 'ООО «ЭЛЕКТРИК ПЛЮС» — создатель из будущего',
@@ -24,6 +25,40 @@ const translations = {
     'capability.two.body': 'Локальная память хранит выбор пользователя, чтобы AKSI отвечала точнее с каждым взаимодействием.',
     'capability.three.title': 'Мгновенный запуск',
     'capability.three.body': 'Демо работает автономно — нажмите кнопку и система активирует сценарий без подключения к API.',
+    'hypernet.title': 'AKSI HyperNet Explorer',
+    'hypernet.subtitle': 'Сканируй континенты данных, подключай сигналы и запускай действия без внешних API.',
+    'hypernet.status.idle': 'Режим ожидания',
+    'hypernet.status.scanning': 'Сканирование сети…',
+    'hypernet.status.ready': 'Сеть синхронизирована',
+    'hypernet.status.executing': 'Выполнение сценария…',
+    'hypernet.search.label': 'Поиск по гиперсети',
+    'hypernet.search.placeholder': 'Введите запрос или вставьте ссылку, чтобы просканировать интернет…',
+    'hypernet.search.submit': 'Сканировать',
+    'hypernet.filters.title': 'Фильтры сигналов',
+    'hypernet.filters.trends': 'Тренды',
+    'hypernet.filters.infrastructure': 'Инфраструктура',
+    'hypernet.filters.markets': 'Рынки',
+    'hypernet.filters.culture': 'Культура',
+    'hypernet.filters.research': 'Исследования',
+    'hypernet.results.empty': 'Сеть ожидает ваш запрос — введите тему, чтобы собрать данные.',
+    'hypernet.summary.total': 'Найдено сигналов: {count}',
+    'hypernet.summary.selected': 'В приоритете: {count}',
+    'hypernet.summary.filters.none': 'Фильтры отключены — анализируются все источники.',
+    'hypernet.summary.filters.active': 'Активны фильтры: {filters}',
+    'hypernet.metric.freshness': 'Свежесть',
+    'hypernet.metric.credibility': 'Достоверность',
+    'hypernet.metric.amplitude': 'Охват',
+    'hypernet.actions.title': 'Сценарии действий',
+    'hypernet.actions.subtitle': 'Выбери сценарий, чтобы HyperNet подготовила отчёт или последовательность действий.',
+    'hypernet.actions.run': 'Запустить сценарий',
+    'hypernet.actions.digest': 'Квантовый дайджест',
+    'hypernet.actions.digest.description': 'Собирает ключевые сигналы и превращает их в сжатый отчёт.',
+    'hypernet.actions.pulse': 'Импульс возможностей',
+    'hypernet.actions.pulse.description': 'Расставляет приоритеты и формирует окно возможностей на основе выбранных источников.',
+    'hypernet.actions.deploy': 'Пакет действий',
+    'hypernet.actions.deploy.description': 'Строит пошаговый план действий и назначает виртуальных агентов.',
+    'hypernet.log.title': 'Журнал HyperNet',
+    'hypernet.log.empty': 'Журнал пуст — начните поиск, чтобы появилось событие.',
     'timeline.title': 'Как запускается AKSI',
     'timeline.body': 'Мы демонстрируем три шага новой реальности: от пробуждения визуальных фрагментов до парящей надписи и вызова системы.',
     'timeline.step1': 'Фрагменты активируются, собираясь в надпись AKSI и формируя базовый слой памяти.',
@@ -65,6 +100,7 @@ const translations = {
   en: {
     'nav.vision': 'Vision',
     'nav.capabilities': 'Capabilities',
+    'nav.hypernet': 'HyperNet',
     'nav.timeline': 'Launch Path',
     'nav.console': 'AI Console',
     'hero.tagline': 'OOO Elektrik Plus — creator from the future',
@@ -87,6 +123,40 @@ const translations = {
     'capability.two.body': 'Local memory keeps user choices so AKSI can respond more accurately with every interaction.',
     'capability.three.title': 'Instant ignition',
     'capability.three.body': 'The demo runs autonomously — press the button and the system orchestrates the journey without any API.',
+    'hypernet.title': 'AKSI HyperNet Explorer',
+    'hypernet.subtitle': 'Scan data continents, plug into signals and trigger actions without external APIs.',
+    'hypernet.status.idle': 'Idle mode',
+    'hypernet.status.scanning': 'Scanning the mesh…',
+    'hypernet.status.ready': 'Mesh synchronised',
+    'hypernet.status.executing': 'Executing scenario…',
+    'hypernet.search.label': 'HyperNet search',
+    'hypernet.search.placeholder': 'Type a query or paste a link to sweep the internet…',
+    'hypernet.search.submit': 'Scan',
+    'hypernet.filters.title': 'Signal filters',
+    'hypernet.filters.trends': 'Trends',
+    'hypernet.filters.infrastructure': 'Infrastructure',
+    'hypernet.filters.markets': 'Markets',
+    'hypernet.filters.culture': 'Culture',
+    'hypernet.filters.research': 'Research',
+    'hypernet.results.empty': 'The mesh awaits your command — enter a topic to gather data.',
+    'hypernet.summary.total': 'Signals found: {count}',
+    'hypernet.summary.selected': 'Priority queue: {count}',
+    'hypernet.summary.filters.none': 'No filters applied — scanning the entire field.',
+    'hypernet.summary.filters.active': 'Filters active: {filters}',
+    'hypernet.metric.freshness': 'Freshness',
+    'hypernet.metric.credibility': 'Credibility',
+    'hypernet.metric.amplitude': 'Reach',
+    'hypernet.actions.title': 'Action scenarios',
+    'hypernet.actions.subtitle': 'Choose a scenario for HyperNet to craft a report or command chain.',
+    'hypernet.actions.run': 'Run scenario',
+    'hypernet.actions.digest': 'Quantum digest',
+    'hypernet.actions.digest.description': 'Collects leading signals and turns them into a condensed report.',
+    'hypernet.actions.pulse': 'Opportunity pulse',
+    'hypernet.actions.pulse.description': 'Prioritises signals and maps the opportunity window.',
+    'hypernet.actions.deploy': 'Action package',
+    'hypernet.actions.deploy.description': 'Builds a step-by-step action plan and assigns virtual agents.',
+    'hypernet.log.title': 'HyperNet log',
+    'hypernet.log.empty': 'Log is clear — start a scan to record events.',
     'timeline.title': 'How AKSI awakens',
     'timeline.body': 'Experience three steps of the new reality: fragments awakening, levitating typography and the system call-to-action.',
     'timeline.step1': 'Fragments ignite, assembling into the AKSI mark while forming the primary memory layer.',
@@ -285,13 +355,15 @@ function initCta() {
     button.addEventListener('click', () => {
       button.classList.add('cta-activated');
       setTimeout(() => button.classList.remove('cta-activated'), 900);
-      const target = document.querySelector('#timeline');
+      const target = document.querySelector('#hypernet') || document.querySelector('#console') || document.querySelector('#timeline');
       if (target) {
         target.scrollIntoView({ behavior: prefersReducedMotion ? 'auto' : 'smooth', block: 'start' });
       }
+      const hyperInput = document.querySelector('[data-hypernet-query]');
       const aiInput = document.querySelector('#ai-input');
-      if (aiInput) {
-        setTimeout(() => aiInput.focus(), prefersReducedMotion ? 0 : 320);
+      const focusTarget = hyperInput || aiInput;
+      if (focusTarget) {
+        setTimeout(() => focusTarget.focus(), prefersReducedMotion ? 0 : 320);
       }
     });
   });
@@ -875,6 +947,561 @@ function createAksiNeuralCore() {
   };
 }
 
+function createHyperNetOrchestrator(engine) {
+  const neural = engine && typeof engine.ingestRealtimeFact === 'function' ? engine : null;
+  const normaliseLang = engine && typeof engine.normaliseLang === 'function'
+    ? (lang) => engine.normaliseLang(lang)
+    : (lang) => (lang === 'en' ? 'en' : 'ru');
+  const eventTarget = new EventTarget();
+  const selection = new Set();
+  const state = {
+    query: '',
+    filters: new Set(),
+    results: [],
+    log: [],
+    status: 'idle',
+    activeAction: 'digest'
+  };
+
+  const availableFilters = ['trends', 'infrastructure', 'markets', 'culture', 'research'];
+
+  const hyperSources = [
+    {
+      id: 'quantum-observatory',
+      priority: 1.4,
+      tags: ['research', 'trends'],
+      headline: {
+        ru: 'Квантовая обсерватория выпускает карту новых интеллектуальных волн',
+        en: 'Quantum observatory releases map of emerging intelligence waves'
+      },
+      summary: {
+        ru: 'Орбитальная сеть спутников зафиксировала 38 всплесков когнитивной активности в мегаполисах.',
+        en: 'The orbital satellite mesh recorded 38 spikes of cognitive activity across megacities.'
+      },
+      detail: {
+        ru: 'По данным HyperNet, города-сфинксы вводят автономные кампусы для совместной работы людей и синтетических интеллектов.',
+        en: 'HyperNet data shows sphinx cities launching autonomous campuses for human and synthetic intelligence co-creation.'
+      },
+      url: 'https://hyper.aksi/quantum-observatory',
+      metrics: { freshness: 0.94, credibility: 0.88, amplitude: 0.72 }
+    },
+    {
+      id: 'metacity-grid',
+      priority: 1.25,
+      tags: ['infrastructure', 'markets'],
+      headline: {
+        ru: 'Метагородская решётка открывает доступ к энергетическим коридорам',
+        en: 'Metacity grid opens access to energy corridors'
+      },
+      summary: {
+        ru: 'Система ультралинейных хабов снижает стоимость запуска цифровых производств на 27%.',
+        en: 'A system of ultralinear hubs drops the cost of spinning up digital factories by 27%.'
+      },
+      detail: {
+        ru: 'ООО «ЭЛЕКТРИК ПЛЮС» тестирует стеклянные подстанции с самоохлаждением и встроенным ИИ-мониторингом.',
+        en: 'OOO Elektrik Plus pilots self-cooled glass substations with embedded AI monitoring.'
+      },
+      url: 'https://hyper.aksi/metacity-grid',
+      metrics: { freshness: 0.86, credibility: 0.91, amplitude: 0.81 }
+    },
+    {
+      id: 'culture-field',
+      priority: 1.12,
+      tags: ['culture', 'trends'],
+      headline: {
+        ru: 'Культурные поля обучают синтетические эмоции для публичных сервисов',
+        en: 'Culture fields train synthetic emotions for public services'
+      },
+      summary: {
+        ru: 'Городские павильоны транслируют эмоциональные паттерны, чтобы улучшить ответы автономных консультантов.',
+        en: 'Urban pavilions broadcast emotional patterns to refine autonomous consultant responses.'
+      },
+      detail: {
+        ru: 'HyperNet отмечает рост вовлечённости на 41% после внедрения эмоцио-графического интерфейса AKSI.',
+        en: 'HyperNet notes a 41% engagement increase after introducing AKSI’s emotio-graphic interface.'
+      },
+      url: 'https://hyper.aksi/culture-field',
+      metrics: { freshness: 0.79, credibility: 0.76, amplitude: 0.69 }
+    },
+    {
+      id: 'energy-swarm',
+      priority: 1.3,
+      tags: ['infrastructure', 'research'],
+      headline: {
+        ru: 'Рой энергомодулей синхронизирует климатические купола',
+        en: 'Energy swarm synchronises climate domes'
+      },
+      summary: {
+        ru: 'Сотни модулей распределяют нагрузку и предотвращают перегрев умных кварталов.',
+        en: 'Hundreds of modules balance the load and prevent smart districts from overheating.'
+      },
+      detail: {
+        ru: 'Алгоритмы AKSI подстраивают частоту, чтобы сохранить комфорт жителей и снизить энергопотери.',
+        en: 'AKSI algorithms tune the frequency to keep citizens comfortable while reducing energy loss.'
+      },
+      url: 'https://hyper.aksi/energy-swarm',
+      metrics: { freshness: 0.91, credibility: 0.83, amplitude: 0.64 }
+    },
+    {
+      id: 'market-singularity',
+      priority: 1.22,
+      tags: ['markets', 'trends'],
+      headline: {
+        ru: 'Рынки сингулярности сигнализируют о росте спроса на автономных советников',
+        en: 'Singularity markets signal a surge in autonomous advisor demand'
+      },
+      summary: {
+        ru: 'Платформы мегагородов заключают контракты на «ИИ-близнецов» для каждого стартапа.',
+        en: 'Megacity platforms sign contracts for “AI twins” to accompany every startup.'
+      },
+      detail: {
+        ru: 'HyperNet фиксирует рост инвестиций в секторе «безключевых» ИИ-интерфейсов на 61% за квартал.',
+        en: 'HyperNet detects a 61% quarterly investment growth in “keyless” AI interfaces.'
+      },
+      url: 'https://hyper.aksi/market-singularity',
+      metrics: { freshness: 0.84, credibility: 0.87, amplitude: 0.78 }
+    },
+    {
+      id: 'civic-neural',
+      priority: 1.18,
+      tags: ['culture', 'infrastructure'],
+      headline: {
+        ru: 'Гражданская нейросеть переводит сервисы в режим «прозрачного участия»',
+        en: 'Civic neural mesh shifts services to transparent participation mode'
+      },
+      summary: {
+        ru: 'Жители управляют районами через голографические панели с обратной связью в реальном времени.',
+        en: 'Citizens steer districts via holographic panels with realtime feedback.'
+      },
+      detail: {
+        ru: 'Система памяти AKSI сохраняет инициативы и связывает их с потоками бюджета и инфраструктуры.',
+        en: 'AKSI’s memory binds civic initiatives to budget and infrastructure streams.'
+      },
+      url: 'https://hyper.aksi/civic-neural',
+      metrics: { freshness: 0.75, credibility: 0.89, amplitude: 0.73 }
+    },
+    {
+      id: 'sustain-lab',
+      priority: 1.15,
+      tags: ['research', 'markets'],
+      headline: {
+        ru: 'Лаборатории устойчивости строят био-сенсоры на базе AKSI',
+        en: 'Sustainability labs build bio-sensors on top of AKSI'
+      },
+      summary: {
+        ru: 'Агрегаторы экологических данных переходят на автономную интерпретацию сигналов.',
+        en: 'Environmental aggregators move toward autonomous signal interpretation.'
+      },
+      detail: {
+        ru: 'HyperNet указывает на снижение времени реакции команд на 48 минут за счёт локальных моделей.',
+        en: 'HyperNet reports reaction times dropping by 48 minutes thanks to local models.'
+      },
+      url: 'https://hyper.aksi/sustain-lab',
+      metrics: { freshness: 0.82, credibility: 0.86, amplitude: 0.58 }
+    },
+    {
+      id: 'aerial-index',
+      priority: 1.08,
+      tags: ['trends', 'culture'],
+      headline: {
+        ru: 'Аэроиндекс фиксирует настроение городов по световым потокам',
+        en: 'Aerial index captures city mood through light flows'
+      },
+      summary: {
+        ru: 'Дроны HyperNet анализируют интенсивность неона и звуковые паттерны, прогнозируя спрос на сервисы.',
+        en: 'HyperNet drones analyse neon intensity and sonic patterns to forecast service demand.'
+      },
+      detail: {
+        ru: 'Панорамы превращаются в дашборды, которые подсказывают, какие сценарии AKSI запустить в районах.',
+        en: 'City panoramas become dashboards guiding which AKSI scenarios to deploy in each district.'
+      },
+      url: 'https://hyper.aksi/aerial-index',
+      metrics: { freshness: 0.77, credibility: 0.74, amplitude: 0.9 }
+    }
+  ];
+
+  const hyperActions = [
+    {
+      id: 'digest',
+      label: {
+        ru: 'Квантовый дайджест',
+        en: 'Quantum digest'
+      },
+      description: {
+        ru: 'Собирает ключевые сигналы и превращает их в сжатый отчёт.',
+        en: 'Collects the leading signals and distils them into a compact report.'
+      },
+      execute({ results, query, filters }) {
+        const top = results.slice(0, 3);
+        const count = top.length;
+        const label = query || 'HyperNet';
+        const filterLabel = filters.length ? filters.join(', ') : 'all channels';
+        return {
+          log: {
+            ru: `Собран квантовый дайджест: ${count} сигнала для «${label}».`,
+            en: `Quantum digest compiled: ${count} signals for “${label}”.`
+          },
+          detail: {
+            ru: top.map((entry) => `${entry.source.headline.ru} — ${Math.round(entry.relevance)}%`),
+            en: top.map((entry) => `${entry.source.headline.en} — ${Math.round(entry.relevance)}%`)
+          },
+          stream: {
+            ru: `HyperNet: дайджест завершён, активные каналы — ${filterLabel}.`,
+            en: `HyperNet: digest ready, active channels — ${filterLabel}.`
+          }
+        };
+      }
+    },
+    {
+      id: 'pulse',
+      label: {
+        ru: 'Импульс возможностей',
+        en: 'Opportunity pulse'
+      },
+      description: {
+        ru: 'Расставляет приоритеты и формирует окно возможностей на основе выбранных источников.',
+        en: 'Ranks priorities and maps the opportunity window based on the selected sources.'
+      },
+      execute({ results, query }) {
+        const window = results.slice(0, 4);
+        const label = query || 'HyperNet';
+        const detailRu = window.map((entry) => `• ${entry.source.headline.ru} → индекс ${Math.round(entry.relevance)}`);
+        const detailEn = window.map((entry) => `• ${entry.source.headline.en} → index ${Math.round(entry.relevance)}`);
+        return {
+          log: {
+            ru: `Импульс сформирован: ${window.length} направлений для «${label}».`,
+            en: `Pulse locked: ${window.length} lanes for “${label}”.`
+          },
+          detail: { ru: detailRu, en: detailEn },
+          stream: {
+            ru: 'HyperNet: возможности ранжированы, окно действий открыто.',
+            en: 'HyperNet: opportunities prioritised, action window open.'
+          }
+        };
+      }
+    },
+    {
+      id: 'deploy',
+      label: {
+        ru: 'Пакет действий',
+        en: 'Action package'
+      },
+      description: {
+        ru: 'Строит пошаговый план действий и назначает виртуальных агентов.',
+        en: 'Builds a stepwise plan and assigns virtual agents.'
+      },
+      execute({ results }) {
+        const mission = results.slice(0, 3);
+        const detailRu = mission.map((entry, index) => `${index + 1}. ${entry.source.headline.ru}`);
+        const detailEn = mission.map((entry, index) => `${index + 1}. ${entry.source.headline.en}`);
+        return {
+          log: {
+            ru: `Пакет действий готов: ${mission.length} шага синхронизированы с агентами.`,
+            en: `Action package ready: ${mission.length} stages synchronised with agents.`
+          },
+          detail: { ru: detailRu, en: detailEn },
+          stream: {
+            ru: 'HyperNet: агенты назначены, последовательность исполнения отправлена.',
+            en: 'HyperNet: agents assigned, execution sequence dispatched.'
+          }
+        };
+      }
+    }
+  ];
+
+  function normaliseTokens(text) {
+    if (!text) return [];
+    return String(text)
+      .toLowerCase()
+      .replace(/[^\p{L}\p{N}\s]+/gu, ' ')
+      .split(/\s+/)
+      .filter((token) => token.length > 2);
+  }
+
+  function uniqueTokens(tokens) {
+    return Array.from(new Set(tokens));
+  }
+
+  function escapeRegExp(value) {
+    return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  }
+
+  function highlightText(text, tokens) {
+    if (!text) return '';
+    if (!tokens || !tokens.length) return text;
+    const pattern = tokens.map((token) => escapeRegExp(token)).join('|');
+    if (!pattern) return text;
+    const regex = new RegExp(`(${pattern})`, 'giu');
+    return text.replace(regex, '<mark>$1</mark>');
+  }
+
+  function buildVectors() {
+    hyperSources.forEach((source) => {
+      const combined = [
+        source.id,
+        ...(source.tags || []),
+        source.headline?.ru,
+        source.headline?.en,
+        source.summary?.ru,
+        source.summary?.en,
+        source.detail?.ru,
+        source.detail?.en
+      ]
+        .filter(Boolean)
+        .join(' ');
+      source.vector = uniqueTokens(normaliseTokens(combined));
+    });
+  }
+
+  buildVectors();
+
+  function evaluateSource(vector, tokens, filterSet, source) {
+    let score = (source.priority || 1) * 1.2;
+    let matches = 0;
+    tokens.forEach((token) => {
+      if (vector.includes(token)) {
+        matches += 1;
+        score += 2.6;
+      } else {
+        const partial = vector.find((item) => item.startsWith(token.slice(0, 4)));
+        if (partial) {
+          matches += 0.5;
+          score += 1.1;
+        }
+      }
+    });
+    if (!tokens.length) {
+      score += 1.6;
+    }
+    if (filterSet.size) {
+      const overlap = source.tags.filter((tag) => filterSet.has(tag)).length;
+      if (overlap) {
+        score += overlap * 1.4;
+      } else {
+        score *= 0.42;
+      }
+    }
+    return { score, matches };
+  }
+
+  function pushLog(type, text, detail) {
+    const entry = {
+      id: `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 6)}`,
+      timestamp: new Date().toISOString(),
+      type,
+      text,
+      detail: detail || null
+    };
+    state.log.unshift(entry);
+    if (state.log.length > 14) {
+      state.log.length = 14;
+    }
+  }
+
+  function getSnapshot() {
+    return {
+      query: state.query,
+      filters: Array.from(state.filters),
+      results: state.results.map((result) => ({
+        ...result,
+        selected: selection.has(result.id)
+      })),
+      log: state.log.slice(),
+      status: state.status,
+      activeAction: state.activeAction,
+      actions: hyperActions.map((action) => ({
+        id: action.id,
+        label: action.label,
+        description: action.description,
+        active: state.activeAction === action.id
+      }))
+    };
+  }
+
+  function emit() {
+    eventTarget.dispatchEvent(new CustomEvent('update', { detail: getSnapshot() }));
+  }
+
+  function search(query, filters, lang = 'ru') {
+    const filterArray = Array.isArray(filters)
+      ? filters.filter((value) => availableFilters.includes(value))
+      : Array.from(filters instanceof Set ? filters : state.filters).filter((value) => availableFilters.includes(value));
+    const filterSet = new Set(filterArray);
+    state.filters = filterSet;
+    state.query = query || '';
+    state.status = 'scanning';
+    emit();
+
+    const tokens = uniqueTokens(normaliseTokens(state.query));
+    const computed = hyperSources.map((source) => {
+      const { score, matches } = evaluateSource(source.vector || [], tokens, filterSet, source);
+      return { source, score, matches };
+    });
+
+    const trimmed = computed
+      .filter((entry) => entry.score > (tokens.length ? 0.45 : 0.25))
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 8)
+      .map((entry, index) => {
+        const highlight = {
+          ru: highlightText(entry.source.summary?.ru || '', tokens),
+          en: highlightText(entry.source.summary?.en || '', tokens)
+        };
+        const detailHighlight = {
+          ru: highlightText(entry.source.detail?.ru || '', tokens),
+          en: highlightText(entry.source.detail?.en || '', tokens)
+        };
+        return {
+          id: entry.source.id,
+          rank: index + 1,
+          score: Number(entry.score.toFixed(3)),
+          matches: entry.matches,
+          relevance: Math.min(100, Math.round(entry.score * 14 + entry.matches * 6)),
+          highlight,
+          detailHighlight,
+          source: entry.source,
+          metrics: entry.source.metrics || { freshness: 0, credibility: 0, amplitude: 0 },
+          tags: entry.source.tags || [],
+          url: entry.source.url
+        };
+      });
+
+    state.results = trimmed;
+    selection.clear();
+    state.results.slice(0, Math.min(3, state.results.length)).forEach((result) => selection.add(result.id));
+    state.status = 'ready';
+
+    const summaryRu = `HyperNet синхронизирована: найдено ${state.results.length} сигналов.`;
+    const summaryEn = `HyperNet synchronised: ${state.results.length} signals surfaced.`;
+    const detail = {
+      ru: state.results.slice(0, 4).map((result) => `${result.source.headline.ru} (${Math.round(result.relevance)}%)`),
+      en: state.results.slice(0, 4).map((result) => `${result.source.headline.en} (${Math.round(result.relevance)}%)`)
+    };
+    pushLog('search', { ru: summaryRu, en: summaryEn }, detail);
+
+    if (neural) {
+      neural.ingestRealtimeFact(
+        'external',
+        {
+          ru: `HyperNet отчёт: ${state.results.length} сигналов для «${state.query || 'глобальный обзор'}».`,
+          en: `HyperNet report: ${state.results.length} signals for “${state.query || 'global overview'}”.`
+        },
+        {
+          query: state.query,
+          filters: Array.from(filterSet),
+          results: state.results.slice(0, 5).map((result) => ({
+            id: result.id,
+            relevance: result.relevance,
+            tags: result.tags
+          }))
+        }
+      );
+    }
+
+    emit();
+  }
+
+  function setFilters(filters, lang = 'ru') {
+    const values = Array.isArray(filters) ? filters : Array.from(filters || []);
+    const clean = values.filter((value) => availableFilters.includes(value));
+    if (!state.query && !clean.length) {
+      state.filters = new Set();
+      emit();
+      return;
+    }
+    search(state.query, new Set(clean), lang);
+  }
+
+  function toggleSelection(id) {
+    if (!id) return;
+    if (selection.has(id)) {
+      selection.delete(id);
+    } else {
+      selection.add(id);
+    }
+    if (!selection.size && state.results.length) {
+      selection.add(state.results[0].id);
+    }
+    emit();
+  }
+
+  function setActiveAction(id) {
+    if (!hyperActions.find((action) => action.id === id)) return;
+    state.activeAction = id;
+    emit();
+  }
+
+  function runActiveAction(lang = 'ru') {
+    const action = hyperActions.find((item) => item.id === state.activeAction);
+    if (!action || !state.results.length) return Promise.resolve(null);
+    const locale = normaliseLang(lang);
+    const selected = state.results.filter((result) => selection.has(result.id));
+    const pool = selected.length ? selected : state.results.slice(0, 3);
+    state.status = 'executing';
+    emit();
+    return new Promise((resolve) => {
+      const delay = prefersReducedMotion ? 120 : 540 + Math.random() * 360;
+      setTimeout(() => {
+        const output = action.execute({ results: pool, query: state.query, filters: Array.from(state.filters) });
+        pushLog('action', output.log, output.detail);
+        if (neural) {
+          neural.ingestRealtimeFact(
+            'external',
+            {
+              ru: output.stream?.ru || 'HyperNet: сценарий выполнен.',
+              en: output.stream?.en || 'HyperNet: scenario executed.'
+            },
+            {
+              action: action.id,
+              selection: pool.map((item) => item.id),
+              query: state.query
+            }
+          );
+        }
+        state.status = 'ready';
+        emit();
+        resolve({ ...output, locale });
+      }, delay);
+    });
+  }
+
+  function prime(lang = 'ru') {
+    const locale = normaliseLang(lang);
+    const defaults = {
+      ru: 'интеллект будущего AKSI',
+      en: 'AKSI future intelligence'
+    };
+    const seed = state.query || defaults[locale] || 'AKSI intelligence';
+    search(seed, state.filters, locale);
+  }
+
+  function refresh() {
+    emit();
+  }
+
+  function subscribe(listener) {
+    if (typeof listener !== 'function') {
+      return () => {};
+    }
+    const handler = (event) => listener(event.detail);
+    eventTarget.addEventListener('update', handler);
+    listener(getSnapshot());
+    return () => eventTarget.removeEventListener('update', handler);
+  }
+
+  return {
+    search,
+    setFilters,
+    toggleSelection,
+    setActiveAction,
+    runActiveAction,
+    subscribe,
+    prime,
+    refresh,
+    getState: getSnapshot
+  };
+}
+
 function renderAiMessage(role, text, lang = 'ru') {
   const container = document.querySelector('[data-ai-messages]');
   if (!container) return;
@@ -1170,7 +1797,7 @@ function initRealtimeSensors(engine) {
 function initAiConsole() {
   const form = document.querySelector('[data-ai-form]');
   const messages = document.querySelector('[data-ai-messages]');
-  if (!form || !messages) return;
+  if (!form || !messages) return null;
   const engine = createAksiNeuralCore();
   let currentLang = document.documentElement.lang === 'en' ? 'en' : 'ru';
   initRealtimeSensors(engine);
@@ -1238,6 +1865,250 @@ function initAiConsole() {
     if (!lang) return;
     setLocale(lang);
   });
+
+  return engine;
+}
+
+function initHyperNet(engine) {
+  const form = document.querySelector('[data-hypernet-form]');
+  const queryInput = form ? form.querySelector('[data-hypernet-query]') : null;
+  const summaryNode = document.querySelector('[data-hypernet-summary]');
+  const resultsNode = document.querySelector('[data-hypernet-results]');
+  const actionsNode = document.querySelector('[data-hypernet-actions]');
+  const logNode = document.querySelector('[data-hypernet-log]');
+  const statusNode = document.querySelector('[data-hypernet-status]');
+  const runButton = document.querySelector('[data-hypernet-run]');
+  const filterNodes = Array.from(document.querySelectorAll('[data-hypernet-filter]'));
+  if (!form || !resultsNode || !actionsNode || !logNode) return;
+
+  const orchestrator = createHyperNetOrchestrator(engine);
+  let currentLang = document.documentElement.lang === 'en' ? 'en' : 'ru';
+
+  function getDictionaryForCurrentLang() {
+    return getDictionary(currentLang);
+  }
+
+  function getActiveFilters() {
+    return filterNodes.filter((node) => node.checked).map((node) => node.value);
+  }
+
+  function render(snapshot) {
+    const dictionary = getDictionaryForCurrentLang();
+    if (statusNode) {
+      statusNode.dataset.state = snapshot.status;
+      statusNode.classList.toggle('is-busy', snapshot.status === 'scanning' || snapshot.status === 'executing');
+      const label = dictionary[`hypernet.status.${snapshot.status}`] || '';
+      const strong = statusNode.querySelector('strong');
+      if (strong) {
+        strong.textContent = label;
+      }
+    }
+
+    if (summaryNode) {
+      const total = dictionary['hypernet.summary.total'].replace('{count}', snapshot.results.length);
+      const selectedCount = snapshot.results.filter((result) => result.selected).length;
+      const selected = dictionary['hypernet.summary.selected'].replace('{count}', selectedCount);
+      const filters = snapshot.filters.length
+        ? dictionary['hypernet.summary.filters.active'].replace(
+            '{filters}',
+            snapshot.filters
+              .map((filter) => dictionary[`hypernet.filters.${filter}`] || filter)
+              .join(', ')
+          )
+        : dictionary['hypernet.summary.filters.none'];
+      summaryNode.innerHTML = '';
+      [total, selected, filters].forEach((line) => {
+        const span = document.createElement('span');
+        span.textContent = line;
+        summaryNode.appendChild(span);
+      });
+    }
+
+    if (queryInput && document.activeElement !== queryInput) {
+      queryInput.value = snapshot.query || '';
+    }
+
+    filterNodes.forEach((node) => {
+      node.checked = snapshot.filters.includes(node.value);
+    });
+
+    resultsNode.innerHTML = '';
+    if (!snapshot.results.length) {
+      const empty = document.createElement('p');
+      empty.textContent = dictionary['hypernet.results.empty'];
+      resultsNode.appendChild(empty);
+    } else {
+      snapshot.results.forEach((result) => {
+        const card = document.createElement('article');
+        card.className = `hypernet-result${result.selected ? ' is-selected' : ''}`;
+        card.dataset.resultId = result.id;
+
+        const header = document.createElement('header');
+        header.className = 'hypernet-result-header';
+
+        const rank = document.createElement('span');
+        rank.className = 'hypernet-result-rank';
+        rank.textContent = result.rank.toString().padStart(2, '0');
+        header.appendChild(rank);
+
+        const titles = document.createElement('div');
+        titles.className = 'hypernet-result-titles';
+        const headline = document.createElement('h4');
+        headline.textContent = result.source.headline[currentLang];
+        titles.appendChild(headline);
+        const url = document.createElement('span');
+        url.className = 'hypernet-result-url';
+        url.textContent = (result.url || '').replace(/^https?:\/\//, '');
+        titles.appendChild(url);
+        header.appendChild(titles);
+
+        const score = document.createElement('span');
+        score.className = 'hypernet-result-score';
+        score.textContent = `${result.relevance}%`;
+        header.appendChild(score);
+
+        card.appendChild(header);
+
+        const summary = document.createElement('p');
+        summary.className = 'hypernet-result-summary';
+        summary.innerHTML = result.highlight[currentLang] || result.source.summary[currentLang];
+        card.appendChild(summary);
+
+        const detail = document.createElement('p');
+        detail.className = 'hypernet-result-detail';
+        detail.innerHTML = result.detailHighlight[currentLang] || result.source.detail[currentLang];
+        card.appendChild(detail);
+
+        const tags = document.createElement('div');
+        tags.className = 'hypernet-result-tags';
+        result.tags.forEach((tag) => {
+          const chip = document.createElement('span');
+          chip.textContent = dictionary[`hypernet.filters.${tag}`] || tag;
+          tags.appendChild(chip);
+        });
+        card.appendChild(tags);
+
+        const metrics = document.createElement('div');
+        metrics.className = 'hypernet-result-metrics';
+        const metricConfig = [
+          { key: 'hypernet.metric.freshness', value: result.metrics?.freshness || 0 },
+          { key: 'hypernet.metric.credibility', value: result.metrics?.credibility || 0 },
+          { key: 'hypernet.metric.amplitude', value: result.metrics?.amplitude || 0 }
+        ];
+        metricConfig.forEach((item) => {
+          const row = document.createElement('div');
+          row.className = 'hypernet-metric';
+          const label = document.createElement('span');
+          label.textContent = dictionary[item.key] || item.key;
+          row.appendChild(label);
+          const meter = document.createElement('div');
+          meter.className = 'hypernet-meter';
+          const fill = document.createElement('span');
+          fill.style.width = `${Math.round(item.value * 100)}%`;
+          meter.appendChild(fill);
+          row.appendChild(meter);
+          metrics.appendChild(row);
+        });
+        card.appendChild(metrics);
+
+        resultsNode.appendChild(card);
+      });
+    }
+
+    actionsNode.innerHTML = '';
+    snapshot.actions.forEach((action) => {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = `hypernet-action${action.active ? ' is-active' : ''}`;
+      button.dataset.actionId = action.id;
+      const title = document.createElement('strong');
+      title.textContent = action.label[currentLang];
+      button.appendChild(title);
+      const description = document.createElement('span');
+      description.textContent = action.description[currentLang];
+      button.appendChild(description);
+      actionsNode.appendChild(button);
+    });
+
+    if (runButton) {
+      const activeAction = snapshot.actions.find((action) => action.active);
+      const baseLabel = dictionary['hypernet.actions.run'];
+      runButton.textContent = activeAction ? `${baseLabel} · ${activeAction.label[currentLang]}` : baseLabel;
+      runButton.disabled = snapshot.status === 'executing' || !snapshot.results.length;
+    }
+
+    logNode.innerHTML = '';
+    if (!snapshot.log.length) {
+      const empty = document.createElement('p');
+      empty.textContent = dictionary['hypernet.log.empty'];
+      logNode.appendChild(empty);
+    } else {
+      snapshot.log.forEach((entry) => {
+        const item = document.createElement('article');
+        item.className = `hypernet-log-entry ${entry.type}`;
+        const time = document.createElement('time');
+        time.dateTime = entry.timestamp;
+        time.textContent = formatDateTimeDisplay(new Date(entry.timestamp), currentLang);
+        item.appendChild(time);
+        const summary = document.createElement('p');
+        summary.textContent = entry.text[currentLang] || '';
+        item.appendChild(summary);
+        const details = entry.detail?.[currentLang];
+        if (Array.isArray(details) && details.length) {
+          const list = document.createElement('ul');
+          details.forEach((line) => {
+            const li = document.createElement('li');
+            li.textContent = line;
+            list.appendChild(li);
+          });
+          item.appendChild(list);
+        }
+        logNode.appendChild(item);
+      });
+    }
+  }
+
+  orchestrator.subscribe(render);
+
+  form.addEventListener('submit', (event) => {
+    event.preventDefault();
+    const query = queryInput ? queryInput.value.trim() : '';
+    orchestrator.search(query, getActiveFilters(), currentLang);
+  });
+
+  filterNodes.forEach((checkbox) => {
+    checkbox.addEventListener('change', () => {
+      orchestrator.setFilters(getActiveFilters(), currentLang);
+    });
+  });
+
+  resultsNode.addEventListener('click', (event) => {
+    const card = event.target.closest('[data-result-id]');
+    if (!card) return;
+    orchestrator.toggleSelection(card.dataset.resultId);
+  });
+
+  actionsNode.addEventListener('click', (event) => {
+    const button = event.target.closest('[data-action-id]');
+    if (!button) return;
+    orchestrator.setActiveAction(button.dataset.actionId);
+  });
+
+  if (runButton) {
+    runButton.addEventListener('click', () => {
+      if (runButton.disabled) return;
+      orchestrator.runActiveAction(currentLang);
+    });
+  }
+
+  document.addEventListener('aksi:language-changed', (event) => {
+    const lang = event.detail?.lang;
+    if (!lang) return;
+    currentLang = lang === 'en' ? 'en' : 'ru';
+    orchestrator.refresh();
+  });
+
+  orchestrator.prime(currentLang);
 }
 
 function boot() {
@@ -1246,7 +2117,8 @@ function boot() {
   initTilt();
   initScrollDepth();
   initCta();
-  initAiConsole();
+  const engine = initAiConsole();
+  initHyperNet(engine);
 }
 
 if (document.readyState === 'loading') {
