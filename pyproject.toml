@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "milana-site"
+version = "0.1.0"
+description = "Milana Superintelligence Hub на Python"
+readme = "README.md"
+authors = [{name = "Milana Team"}]
+requires-python = ">=3.10"
+dependencies = [
+    "Flask>=3.0",
+    "bleach>=6.1",
+    "pydantic>=2.5"
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0"
+]
+
+[tool.setuptools.packages.find]
+include = ["milana_site"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]

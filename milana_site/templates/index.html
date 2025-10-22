@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="grid">
+  <article class="card">
+    <h2>Суперчат Milana</h2>
+    <form method="post" action="{{ url_for('chat') }}" class="stack">
+      <label>
+        Введите сообщение
+        <textarea name="message" rows="3" placeholder="Задайте вопрос Milana" required></textarea>
+      </label>
+      <button type="submit" class="button primary">Отправить</button>
+    </form>
+    <div class="history">
+      <h3>Диалог</h3>
+      {% if not chat_history %}
+        <p class="muted">История пуста — начните разговор.</p>
+      {% else %}
+        <ul>
+          {% for message in chat_history %}
+            <li class="message {{ message.role }}">
+              <strong>{{ 'Пользователь' if message.role == 'user' else 'Milana' }}:</strong>
+              <pre>{{ message.content }}</pre>
+            </li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    </div>
+  </article>
+
+  <article class="card">
+    <h2>Metacode Studio</h2>
+    <form method="post" action="{{ url_for('metacode') }}" class="stack">
+      <label>
+        Название протокола
+        <input type="text" name="title" placeholder="AKSI Aurora" required />
+      </label>
+      <label>
+        Цель
+        <input type="text" name="objective" placeholder="Синхронизировать эмпатию и действие" required />
+      </label>
+      <label>
+        Модули (каждый с новой строки, формат: Название | Описание | Канал)
+        <textarea name="modules" rows="5" placeholder="Сканер эмоций | Оценка эмоционального тона | aether"></textarea>
+      </label>
+      <label>
+        Теги (через запятую)
+        <input type="text" name="tags" placeholder="empathy, focus" />
+      </label>
+      <button type="submit" class="button">Сохранить blueprint</button>
+    </form>
+    <div class="history">
+      <h3>Сохранённые blueprint-ы</h3>
+      {% if not blueprints %}
+        <p class="muted">Метакоды ещё не созданы.</p>
+      {% else %}
+        <ul>
+          {% for blueprint in blueprints %}
+            <li>
+              <strong>{{ blueprint.title }}</strong>
+              <p>{{ blueprint.synopsis() }}</p>
+            </li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    </div>
+  </article>
+
+  <article class="card">
+    <h2>AKSI Resonance Console</h2>
+    <form method="post" action="{{ url_for('resonance') }}" class="stack">
+      <div class="range-group">
+        <label>Эмпатия <input type="number" name="empathy" min="0" max="10" value="5" /></label>
+        <label>Фокус <input type="number" name="focus" min="0" max="10" value="5" /></label>
+        <label>Риск <input type="number" name="risk" min="0" max="10" value="2" /></label>
+      </div>
+      <label>
+        Канал связи
+        <select name="channel">
+          <option value="core">Базовый протокол</option>
+          <option value="aether">Эфирный</option>
+          <option value="quantum">Квантовый</option>
+          <option value="biolink">Биолинк</option>
+        </select>
+      </label>
+      <label>
+        Мантра/настрой
+        <input type="text" name="mantra" placeholder="Нежность ведёт к прозрению" />
+      </label>
+      <button type="submit" class="button">Расчитать резонанс</button>
+    </form>
+    <div class="history">
+      <h3>История резонансов</h3>
+      {% if not resonances %}
+        <p class="muted">Резонанс пока не измерен.</p>
+      {% else %}
+        <ul>
+          {% for resonance in resonances %}
+            <li>
+              <pre>{{ resonance.summary() }}</pre>
+            </li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    </div>
+  </article>
+</section>
+{% endblock %}

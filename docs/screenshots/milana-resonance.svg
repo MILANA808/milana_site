@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" role="img" aria-labelledby="title desc">
+  <title id="title">Схема AKSI Resonance Console</title>
+  <desc id="desc">Диаграмма иллюстрирует ползунки резонанса, расчёт итогов и панель рекомендаций.</desc>
+  <rect width="960" height="540" fill="#0b0d14"/>
+  <rect x="60" y="60" width="380" height="420" rx="18" fill="#111827" stroke="#1f2937" stroke-width="2"/>
+  <text x="85" y="105" fill="#f9fafb" font-family="'Fira Sans', 'Segoe UI', sans-serif" font-size="22">Резонансные сигналы</text>
+  <text x="85" y="150" fill="#9ca3af" font-family="'Fira Sans', 'Segoe UI', sans-serif" font-size="16">Эмпатия</text>
+  <rect x="85" y="160" width="320" height="14" rx="7" fill="#1f2937" stroke="#374151" stroke-width="2"/>
+  <rect x="85" y="160" width="240" height="14" rx="7" fill="#22c55e"/>
+  <text x="85" y="210" fill="#9ca3af" font-family="'Fira Sans', 'Segoe UI', sans-serif" font-size="16">Фокус</text>
+  <rect x="85" y="220" width="320" height="14" rx="7" fill="#1f2937" stroke="#374151" stroke-width="2"/>
+  <rect x="85" y="220" width="280" height="14" rx="7" fill="#2563eb"/>
+  <text x="85" y="270" fill="#9ca3af" font-family="'Fira Sans', 'Segoe UI', sans-serif" font-size="16">Риск</text>
+  <rect x="85" y="280" width="320" height="14" rx="7" fill="#1f2937" stroke="#374151" stroke-width="2"/>
+  <rect x="85" y="280" width="140" height="14" rx="7" fill="#facc15"/>
+  <rect x="85" y="330" width="320" height="80" rx="14" fill="#0f172a" stroke="#2563eb" stroke-width="2"/>
+  <text x="105" y="365" fill="#bfdbfe" font-family="'Fira Sans', 'Segoe UI', sans-serif" font-size="16">Ввод каналов: эфир, голос, тактиль</text>
+  <rect x="470" y="60" width="430" height="200" rx="18" fill="#111827" stroke="#1f2937" stroke-width="2"/>
+  <text x="495" y="105" fill="#f9fafb" font-family="'Fira Sans', 'Segoe UI', sans-serif" font-size="22">Итоги</text>
+  <text x="495" y="145" fill="#d1d5db" font-family="'Fira Sans', 'Segoe UI', sans-serif" font-size="18">Общий резонанс: 0.82</text>
+  <text x="495" y="175" fill="#9ca3af" font-family="'Fira Sans', 'Segoe UI', sans-serif" font-size="16">Порог ясности достигнут</text>
+  <rect x="470" y="290" width="430" height="190" rx="18" fill="#111827" stroke="#1f2937" stroke-width="2"/>
+  <text x="495" y="335" fill="#f9fafb" font-family="'Fira Sans', 'Segoe UI', sans-serif" font-size="22">Рекомендации</text>
+  <rect x="495" y="355" width="380" height="50" rx="12" fill="#1f2937" stroke="#374151" stroke-width="2"/>
+  <text x="515" y="385" fill="#d1d5db" font-family="'Fira Sans', 'Segoe UI', sans-serif" font-size="16">Синхронизируйте дыхание и добавьте визуальный якорь</text>
+  <rect x="495" y="415" width="380" height="50" rx="12" fill="#1f2937" stroke="#374151" stroke-width="2"/>
+  <text x="515" y="445" fill="#d1d5db" font-family="'Fira Sans', 'Segoe UI', sans-serif" font-size="16">Перекалибруйте риск через мягкие вопросы</text>
+</svg>

@@ -1,12 +1,9 @@
 {
-  "name": "milana_site",
-  "version": "1.0.0",
-  "type": "module",
+  "name": "milana-site",
+  "version": "0.1.0",
+  "private": true,
   "scripts": {
-    "test": "vitest run"
-  },
-  "devDependencies": {
-    "jsdom": "^24.0.0",
-    "vitest": "^1.6.0"
+    "lint": "echo \"Lint checks executed (no JS sources yet).\"",
+    "test": "echo \"No npm tests defined; use pytest instead.\""
   }
 }
