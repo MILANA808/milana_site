@@ -34,6 +34,8 @@
             <div class="sidebar-section">
                 <p class="sidebar-label">Приложения</p>
                 <ul>
+                    <li><button type="button" data-target="metacode">metacode</button></li>
+                    <li><button type="button" data-target="aksiresonance">aksi resonance</button></li>
                     <li><button type="button" data-target="moodmirror">moodmirror</button></li>
                     <li><button type="button" data-target="mindmirror">mindmirror</button></li>
                     <li><button type="button" data-target="mindlink">mindlink</button></li>
@@ -110,6 +112,130 @@
                         </div>
                         <pre id="knowledgePreview" class="knowledge-preview" aria-live="polite"></pre>
                     </section>
+                </div>
+            </div>
+
+            <div id="metacode" class="app-section">
+                <div class="card metacode-card">
+                    <h3>Metacode Studio для AKSI</h3>
+                    <p>Соберите метакод, объединяющий память, источники и действия AKSI. Blueprint помогает мгновенно запускать
+                        новые сценарии Milana.</p>
+                    <p id="metacodeStatus" class="note">Введите цель и выберите модули — студия сохранит готовый протокол в архив.</p>
+                    <div class="metacode-grid">
+                        <section class="metacode-panel">
+                            <h4>1. Фокус и модули</h4>
+                            <label for="metacodeGoal">Цель или гипотеза</label>
+                            <textarea id="metacodeGoal" placeholder="Например: построить протокол карьерного наставничества для дизайнера"></textarea>
+                            <div class="metacode-options" role="group" aria-labelledby="metacodeModulesLabel">
+                                <p id="metacodeModulesLabel" class="metacode-options-title">Модули AKSI</p>
+                                <label class="metacode-option">
+                                    <input type="checkbox" name="metacodeModule" value="memory" checked>
+                                    <span>
+                                        <strong>Memory Vault</strong>
+                                        <small>Фиксирует инсайты и персональные маркеры.</small>
+                                    </span>
+                                </label>
+                                <label class="metacode-option">
+                                    <input type="checkbox" name="metacodeModule" value="knowledge" checked>
+                                    <span>
+                                        <strong>Knowledge Links</strong>
+                                        <small>Подключает интернет-оркестратор и внешние данные.</small>
+                                    </span>
+                                </label>
+                                <label class="metacode-option">
+                                    <input type="checkbox" name="metacodeModule" value="creativity">
+                                    <span>
+                                        <strong>Creative Pulse</strong>
+                                        <small>Генерирует концепции, визуальные и текстовые эксперименты.</small>
+                                    </span>
+                                </label>
+                                <label class="metacode-option">
+                                    <input type="checkbox" name="metacodeModule" value="automation">
+                                    <span>
+                                        <strong>Action Sequencer</strong>
+                                        <small>Организует автоматизированные шаги и проверки.</small>
+                                    </span>
+                                </label>
+                                <label class="metacode-option">
+                                    <input type="checkbox" name="metacodeModule" value="guardian">
+                                    <span>
+                                        <strong>Guardian Loop</strong>
+                                        <small>Контролирует риски, соответствие и финальное подтверждение.</small>
+                                    </span>
+                                </label>
+                            </div>
+                            <button type="button" id="metacodeGenerate">Собрать метакод</button>
+                        </section>
+                        <section class="metacode-panel">
+                            <h4>2. Blueprint AKSI</h4>
+                            <pre id="metacodeOutput" class="metacode-output" aria-live="polite">Опишите цель и нажмите «Собрать метакод», чтобы получить готовый blueprint.</pre>
+                            <div class="metacode-history-wrapper">
+                                <h5>Архив протоколов</h5>
+                                <div id="metacodeHistory" class="metacode-history">
+                                    <p class="note">История появится после первой генерации.</p>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+
+            <div id="aksiresonance" class="app-section">
+                <div class="card aksi-card">
+                    <h3>AKSI Resonance Console</h3>
+                    <p>Настройте эмоциональные и стратегические параметры Акси, чтобы синхронизировать ответы Milana с целями
+                        команды или проекта.</p>
+                    <p id="aksiStatus" class="note">Добавьте контекст и уровни эмпатии, фокуса и риска — консоль предложит готовый протокол.</p>
+                    <div class="aksi-grid">
+                        <section class="aksi-panel">
+                            <label for="aksiScenario">Сценарий</label>
+                            <select id="aksiScenario">
+                                <option value="research">Исследование и аналитика</option>
+                                <option value="strategy">Стратегическая сессия</option>
+                                <option value="support">Эмпатическая поддержка</option>
+                            </select>
+                            <label for="aksiContext">Контекст или запрос</label>
+                            <textarea id="aksiContext" placeholder="Опишите ситуацию, ограничения и желаемый результат"></textarea>
+                            <div class="aksi-sliders">
+                                <div class="aksi-slider">
+                                    <label for="aksiEmpathy">Эмпатия <span id="aksiEmpathyValue">50%</span></label>
+                                    <input type="range" id="aksiEmpathy" min="0" max="100" value="50">
+                                </div>
+                                <div class="aksi-slider">
+                                    <label for="aksiFocus">Фокус <span id="aksiFocusValue">60%</span></label>
+                                    <input type="range" id="aksiFocus" min="0" max="100" value="60">
+                                </div>
+                                <div class="aksi-slider">
+                                    <label for="aksiRisk">Толерантность к риску <span id="aksiRiskValue">40%</span></label>
+                                    <input type="range" id="aksiRisk" min="0" max="100" value="40">
+                                </div>
+                            </div>
+                            <div class="aksi-channels" role="group" aria-labelledby="aksiChannelsLabel">
+                                <p id="aksiChannelsLabel" class="aksi-channels-title">Активные каналы</p>
+                                <label class="aksi-channel">
+                                    <input type="checkbox" name="aksiChannel" value="voice">
+                                    <span>Голосовой стрим</span>
+                                </label>
+                                <label class="aksi-channel">
+                                    <input type="checkbox" name="aksiChannel" value="vision">
+                                    <span>Визуальные подсказки</span>
+                                </label>
+                                <label class="aksi-channel">
+                                    <input type="checkbox" name="aksiChannel" value="automation">
+                                    <span>Автоматизация действий</span>
+                                </label>
+                            </div>
+                            <button type="button" id="aksiComposeButton">Синтезировать протокол</button>
+                        </section>
+                        <section class="aksi-panel">
+                            <h4>Протокол запуска</h4>
+                            <pre id="aksiPlan" class="aksi-plan" aria-live="polite">Ожидаю параметры — после генерации здесь появится детализированный сценарий запуска Акси.</pre>
+                            <h5>Сигналы AKSI</h5>
+                            <ul id="aksiSignals" class="aksi-signals">
+                                <li>Консоль готова принимать параметры.</li>
+                            </ul>
+                        </section>
+                    </div>
                 </div>
             </div>
 

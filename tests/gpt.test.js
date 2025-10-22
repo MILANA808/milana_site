@@ -35,6 +35,11 @@ const createStorage = (initial = {}) => {
   };
 };
 
+const createHistory = () => ({
+  state: { marker: 'state' },
+  replaceState: vi.fn()
+});
+
 const createFetchSuccess = (content = 'готово') => {
   const responses = Array.isArray(content) ? content : [content];
   let callIndex = 0;
@@ -71,12 +76,14 @@ describe('createGptIntegration', () => {
     const storage = createStorage({ gptApiKey: 'sk-stored' });
     const fetchMock = createFetchSuccess();
     const elements = createDom();
+    const historyAPI = createHistory();
 
     createGptIntegration({
       ...elements,
       storage,
       fetchImpl: fetchMock,
-      autoApplyQuery: false
+      autoApplyQuery: false,
+      historyAPI
     });
 
     expect(elements.keyField.value).toBe('sk-stored');
@@ -87,12 +94,14 @@ describe('createGptIntegration', () => {
     const storage = createStorage();
     const fetchMock = createFetchSuccess();
     const elements = createDom();
+    const historyAPI = createHistory();
 
     const integration = createGptIntegration({
       ...elements,
       storage,
       fetchImpl: fetchMock,
-      autoApplyQuery: false
+      autoApplyQuery: false,
+      historyAPI
     });
 
     await expect(integration.query([
@@ -105,12 +114,14 @@ describe('createGptIntegration', () => {
     const storage = createStorage();
     const fetchMock = createFetchSuccess(['готово', 'Отметка времени: 2025-02-14T10:15:00.000Z']);
     const elements = createDom();
+    const historyAPI = createHistory();
 
     const integration = createGptIntegration({
       ...elements,
       storage,
       fetchImpl: fetchMock,
-      autoApplyQuery: false
+      autoApplyQuery: false,
+      historyAPI
     });
 
     elements.keyField.value = 'sk-check';
@@ -130,12 +141,14 @@ describe('createGptIntegration', () => {
     const storage = createStorage();
     const fetchMock = createFetchFailure(401, 'invalid key');
     const elements = createDom();
+    const historyAPI = createHistory();
 
     const integration = createGptIntegration({
       ...elements,
       storage,
       fetchImpl: fetchMock,
-      autoApplyQuery: false
+      autoApplyQuery: false,
+      historyAPI
     });
 
     elements.keyField.value = 'sk-bad';
@@ -151,13 +164,15 @@ describe('createGptIntegration', () => {
     const storage = createStorage();
     const fetchMock = createFetchSuccess(['готово', 'Подтверждаю время 2025-02-14T10:15:00.000Z']);
     const elements = createDom();
+    const historyAPI = createHistory();
 
     const integration = createGptIntegration({
       ...elements,
       storage,
       fetchImpl: fetchMock,
       locationHref: 'https://example.com/?sk=sk-url',
-      autoApplyQuery: true
+      autoApplyQuery: true,
+      historyAPI
     });
 
     await integration.ready;
@@ -165,6 +180,27 @@ describe('createGptIntegration', () => {
     expect(storage.snapshot().gptApiKey).toBe('sk-url');
     expect(fetchMock).toHaveBeenCalledTimes(2);
     expect(elements.statusField.textContent).toContain('2025-02-14T10:15:00.000Z');
+    expect(historyAPI.replaceState).toHaveBeenCalledWith(historyAPI.state, '', 'https://example.com/');
+  });
+
+  it('очищает параметр sk в URL, сохраняя остальные параметры', async () => {
+    const storage = createStorage();
+    const fetchMock = createFetchSuccess(['готово', 'Подтверждаю время 2025-02-14T10:15:00.000Z']);
+    const elements = createDom();
+    const historyAPI = createHistory();
+
+    const integration = createGptIntegration({
+      ...elements,
+      storage,
+      fetchImpl: fetchMock,
+      locationHref: 'https://example.com/?sk=sk-secret&mode=fast',
+      autoApplyQuery: true,
+      historyAPI
+    });
+
+    await integration.ready;
+
+    expect(historyAPI.replaceState).toHaveBeenCalledWith(historyAPI.state, '', 'https://example.com/?mode=fast');
   });
 
   it('использует бесплатный движок если ключ не задан, но разрешён free tier', async () => {
@@ -176,13 +212,15 @@ describe('createGptIntegration', () => {
     const freeTier = {
       respond: vi.fn(async () => 'ответ free tier')
     };
+    const historyAPI = createHistory();
 
     const integration = createGptIntegration({
       ...elements,
       storage,
       fetchImpl: fetchMock,
       autoApplyQuery: false,
-      freeTier
+      freeTier,
+      historyAPI
     });
 
     expect(elements.statusField.textContent).toContain('Бесплатный режим');

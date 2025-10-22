@@ -36,6 +36,7 @@ export function createGptIntegration({
     storage = typeof window !== 'undefined' ? window.localStorage : undefined,
     fetchImpl = typeof window !== 'undefined' ? window.fetch.bind(window) : undefined,
     locationHref = typeof window !== 'undefined' ? window.location?.href : undefined,
+    historyAPI = typeof window !== 'undefined' ? window.history : undefined,
     autoApplyQuery = true,
     freeTier
 } = {}) {
@@ -286,6 +287,17 @@ export function createGptIntegration({
         if (!url) return;
         const keyFromQuery = (url.searchParams.get('sk') || '').trim();
         if (!keyFromQuery) return;
+
+        url.searchParams.delete('sk');
+        const sanitisedHref = url.toString();
+        if (historyAPI && typeof historyAPI.replaceState === 'function') {
+            try {
+                historyAPI.replaceState(historyAPI.state ?? null, '', sanitisedHref);
+            } catch (error) {
+                console.warn('Не удалось очистить URL от ключа API:', error);
+            }
+        }
+        locationHref = sanitisedHref;
 
         persistKey(keyFromQuery, { silent: true });
         const prefix = 'Ключ из ссылки сохранён.';
