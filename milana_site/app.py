@@ -176,6 +176,7 @@ def create_app() -> Flask:
         session.pop("chat_history", None)
         session.pop("blueprints", None)
         session.pop("resonances", None)
+        memory.clear()
         flash("Сессия очищена", "info")
         return redirect(url_for("index"))
 
