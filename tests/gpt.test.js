@@ -61,6 +61,16 @@ const createFetchFailure = (status = 401, message = 'некорректный к
   })
 }));
 
+const createProxySuccess = (content = 'готово') => {
+  const responses = Array.isArray(content) ? content : [content];
+  let callIndex = 0;
+  return vi.fn(async () => ({
+    choices: [
+      { message: { content: responses[Math.min(callIndex++, responses.length - 1)] } }
+    ]
+  }));
+};
+
 describe('createGptIntegration', () => {
   beforeEach(() => {
     vi.useFakeTimers();
@@ -201,6 +211,59 @@ describe('createGptIntegration', () => {
     await integration.ready;
 
     expect(historyAPI.replaceState).toHaveBeenCalledWith(historyAPI.state, '', 'https://example.com/?mode=fast');
+  });
+
+  it('использует защищённый прокси при запросе без ключа', async () => {
+    const storage = createStorage();
+    const proxy = createProxySuccess('ответ через прокси');
+    const fetchMock = vi.fn(() => {
+      throw new Error('fetch не должен вызываться при работе через прокси');
+    });
+    const elements = createDom();
+    const historyAPI = createHistory();
+
+    const integration = createGptIntegration({
+      ...elements,
+      storage,
+      fetchImpl: fetchMock,
+      proxyChat: proxy,
+      autoApplyQuery: false,
+      historyAPI
+    });
+
+    const reply = await integration.query([
+      { role: 'user', content: 'привет' }
+    ]);
+
+    expect(reply).toBe('ответ через прокси');
+    expect(proxy).toHaveBeenCalledTimes(1);
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it('проверяет подключение через прокси и сообщает отметку времени', async () => {
+    const storage = createStorage();
+    const proxy = createProxySuccess(['готово', 'Подтверждаю время 2025-02-14T10:15:00.000Z']);
+    const fetchMock = vi.fn(() => {
+      throw new Error('fetch не должен вызываться при работе через прокси');
+    });
+    const elements = createDom();
+    const historyAPI = createHistory();
+
+    const integration = createGptIntegration({
+      ...elements,
+      storage,
+      fetchImpl: fetchMock,
+      proxyChat: proxy,
+      autoApplyQuery: false,
+      historyAPI
+    });
+
+    const result = await integration.testKey();
+
+    expect(result).toBe(true);
+    expect(proxy).toHaveBeenCalledTimes(2);
+    expect(elements.statusField.textContent).toContain('Прокси готов');
+    expect(elements.statusField.textContent).toContain('2025-02-14T10:15:00.000Z');
   });
 
   it('использует бесплатный движок если ключ не задан, но разрешён free tier', async () => {

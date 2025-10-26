@@ -55,7 +55,8 @@ document.addEventListener('DOMContentLoaded', () => {
         clearButton: document.getElementById('gptClearKey'),
         statusField: document.getElementById('gptKeyStatus'),
         freeTier: freeTierEngine,
-        historyAPI: window.history
+        historyAPI: window.history,
+        proxyChat: window.AKSI?.chat
     });
 
     const queryGPT = (...args) => gptIntegration.query(...args);
