@@ -10,6 +10,7 @@
     <link rel="icon" type="image/svg+xml" href="./assets/favicon.svg">
     <link rel="manifest" href="./assets/site.webmanifest">
     <link rel="stylesheet" href="./styles/main.css">
+    <script src="scripts/openai-proxy.js"></script>
 </head>
 <body>
     <header>
@@ -420,5 +421,7 @@
     </main>
 
     <script type="module" src="./scripts/main.js"></script>
+<button id="aksiTest" style="position:fixed;right:10px;bottom:10px;z-index:9999">AKSI Test</button>
+<script>document.getElementById("aksiTest").onclick=async()=>{const res=await AKSI.chat([{role:"system",content:"You are Milana AKSI assistant."},{role:"user",content:"Привет!"}]);alert(res.choices?.[0]?.message?.content||JSON.stringify(res));};</script>
 </body>
 </html>

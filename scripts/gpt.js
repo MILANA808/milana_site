@@ -25,6 +25,20 @@ const coerceUrl = (href) => {
     }
 };
 
+const ensureErrorWithCode = (error, defaultCode, defaultMessage) => {
+    if (error instanceof Error) {
+        if (!error.code) {
+            error.code = defaultCode;
+        }
+        return error;
+    }
+    const wrapped = new Error(defaultMessage ?? String(error));
+    wrapped.code = defaultCode;
+    return wrapped;
+};
+
+const extractChatMessage = (payload) => payload?.choices?.[0]?.message?.content?.trim();
+
 export const DEFAULT_GPT_MODEL = 'gpt-4o-mini';
 
 export function createGptIntegration({
@@ -38,7 +52,8 @@ export function createGptIntegration({
     locationHref = typeof window !== 'undefined' ? window.location?.href : undefined,
     historyAPI = typeof window !== 'undefined' ? window.history : undefined,
     autoApplyQuery = true,
-    freeTier
+    freeTier,
+    proxyChat = typeof window !== 'undefined' ? window?.AKSI?.chat : undefined
 } = {}) {
     keyField = requiredElement(keyField, 'ввода ключа');
     statusField = requiredElement(statusField, 'статуса ключа');
@@ -51,6 +66,39 @@ export function createGptIntegration({
 
     let gptApiKey = '';
     let busy = false;
+
+    const getProxyChat = () => {
+        if (typeof proxyChat === 'function') {
+            return proxyChat;
+        }
+        if (typeof window !== 'undefined' && window?.AKSI && typeof window.AKSI.chat === 'function') {
+            return window.AKSI.chat;
+        }
+        return undefined;
+    };
+
+    const hasProxy = () => typeof getProxyChat() === 'function';
+
+    const callProxy = async (messages, { model = DEFAULT_GPT_MODEL, temperature } = {}) => {
+        const proxy = getProxyChat();
+        if (!proxy) {
+            const error = new Error('Защищённый прокси недоступен.');
+            error.code = 'PROXY_UNAVAILABLE';
+            throw error;
+        }
+        try {
+            const response = await proxy(messages, { model, temperature });
+            const text = extractChatMessage(response);
+            if (!text) {
+                const error = new Error('Прокси вернул пустой ответ.');
+                error.code = 'PROXY_EMPTY';
+                throw error;
+            }
+            return text;
+        } catch (error) {
+            throw ensureErrorWithCode(error, 'PROXY_ERROR', 'Ошибка прокси');
+        }
+    };
 
     const hasFreeTier = () => freeTier && typeof freeTier.respond === 'function';
 
@@ -103,6 +151,8 @@ export function createGptIntegration({
         syncField(gptApiKey);
         if (gptApiKey) {
             setStatus('Ключ загружен и готов к работе.');
+        } else if (hasProxy()) {
+            setStatus('Подключено через защищённый прокси AKSI. Ключ хранится на сервере.');
         } else if (hasFreeTier()) {
             setStatus('Бесплатный режим Milana Super GPT активен. Добавьте ключ, чтобы подключить облачные модели.');
         } else {
@@ -115,7 +165,9 @@ export function createGptIntegration({
         gptApiKey = '';
         storageAPI.removeItem('gptApiKey');
         syncField('');
-        if (hasFreeTier()) {
+        if (hasProxy()) {
+            setStatus('Ключ удалён из браузера. Прокси AKSI остаётся активным.');
+        } else if (hasFreeTier()) {
             setStatus('Ключ удалён. Доступен бесплатный режим Super GPT без облачных моделей.');
         } else {
             setStatus('Ключ удалён из этого браузера.');
@@ -124,6 +176,9 @@ export function createGptIntegration({
     };
 
     const ensureKey = () => {
+        if (hasProxy()) {
+            return gptApiKey;
+        }
         if (!gptApiKey) {
             persistKey('', { silent: true });
         }
@@ -138,13 +193,22 @@ export function createGptIntegration({
     const formatError = (error) => {
         if (!error) return 'Неизвестная ошибка GPT.';
         if (error.code === 'NO_KEY') {
-            return 'Добавьте ключ OpenAI API в блоке «Интеграция с GPT». Ключ хранится только в вашем браузере.';
+            return 'Добавьте ключ OpenAI API в блоке «Интеграция с GPT».\u00A0Ключ хранится только в вашем браузере.';
         }
         if (error.code === 'FREE_TIER_EMPTY') {
             return 'Бесплатный режим Super GPT не смог подготовить ответ. Уточните запрос или добавьте ключ для облачных моделей.';
         }
         if (error.code === 'FREE_TIER_FAILED') {
             return `Бесплатный режим Super GPT вернул ошибку: ${error.message}`;
+        }
+        if (error.code === 'PROXY_UNAVAILABLE') {
+            return 'Защищённый прокси AKSI недоступен. Проверьте, что сервер запущен.';
+        }
+        if (error.code === 'PROXY_EMPTY') {
+            return 'Прокси AKSI ответил пустым сообщением. Попробуйте повторить запрос.';
+        }
+        if (error.code === 'PROXY_ERROR') {
+            return `Ошибка прокси AKSI: ${error.message}`;
         }
         return `Ошибка GPT: ${error.message}`;
     };
@@ -154,6 +218,10 @@ export function createGptIntegration({
         model = DEFAULT_GPT_MODEL,
         useFreeTier = false
     } = {}) => {
+        if (hasProxy()) {
+            return callProxy(messages, { model, temperature });
+        }
+
         if (gptApiKey) {
             const key = ensureKey();
             const response = await fetchImpl('https://api.openai.com/v1/chat/completions', {
@@ -176,7 +244,7 @@ export function createGptIntegration({
                 throw error;
             }
 
-            const text = data?.choices?.[0]?.message?.content?.trim();
+            const text = extractChatMessage(data);
             if (!text) {
                 const error = new Error('GPT вернул пустой ответ.');
                 error.code = 'EMPTY_RESPONSE';
@@ -244,6 +312,32 @@ export function createGptIntegration({
     const testKey = async ({ candidate, message } = {}) => {
         const candidateValue = typeof candidate === 'string' ? candidate.trim() : '';
         const resolvedCandidate = candidateValue || keyField.value.trim();
+        const proxyAvailable = hasProxy();
+
+        if (!resolvedCandidate && !gptApiKey && proxyAvailable) {
+            setStatus('Ключ не требуется. Проверяю подключение через защищённый прокси...', { error: false });
+            toggleBusy(true);
+            try {
+                const confirmation = await callProxy([
+                    { role: 'system', content: 'Ты лаконичный проверочный бот.' },
+                    { role: 'user', content: 'Ответь одним словом «готово».' }
+                ], { temperature: 0 });
+                setStatus(`Прокси активен. GPT ответил: ${confirmation}. Запрашиваю дату и время...`);
+                try {
+                    const { answer, isoStamp } = await runDateTimeProbe();
+                    setStatus(`Прокси готов. GPT подтвердил время ${isoStamp}. Ответ: ${answer}`);
+                    return true;
+                } catch (error) {
+                    setStatus(`Прокси доступен, но проверка времени не удалась. ${formatError(error)}`, { error: true });
+                    return false;
+                }
+            } catch (error) {
+                setStatus(formatError(error), { error: true });
+                return false;
+            } finally {
+                toggleBusy(false);
+            }
+        }
 
         if (!resolvedCandidate && !gptApiKey) {
             setStatus('Введите ключ перед проверкой.', { error: true });
@@ -319,7 +413,9 @@ export function createGptIntegration({
             saveButton.addEventListener('click', async () => {
                 const savedKey = persistKey('', { silent: true });
                 if (!savedKey) {
-                    setStatus('Введите ключ перед сохранением.', { error: true });
+                    setStatus(hasProxy()
+                        ? 'Ключ не введён. Прокси AKSI продолжает работать без ключа.'
+                        : 'Введите ключ перед сохранением.', { error: !hasProxy() });
                     return;
                 }
                 await testKey({
