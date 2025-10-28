@@ -1,427 +1,80 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-    <meta name="description" content="Milana — портал сверхинтеллекта AKSI с готовыми мини-приложениями и интеграцией GPT.">
-    <meta name="theme-color" content="#a76dff">
-    <meta name="robots" content="index,follow">
-    <title>Milana – Портал AKSI</title>
-    <link rel="icon" type="image/svg+xml" href="./assets/favicon.svg">
-    <link rel="manifest" href="./assets/site.webmanifest">
-    <link rel="stylesheet" href="./styles/main.css">
-    <script src="scripts/openai-proxy.js"></script>
-</head>
-<body>
-    <header>
-        <div class="header-info">
-            <h1>Milana Superintelligence Hub</h1>
-            <span>Фиолетовый интерфейс для диалогов сильнее OpenAI и DeepSeek</span>
-        </div>
-        <div class="tag">Hyper AI Edition</div>
-    </header>
-    <main id="layout" role="main">
-        <nav id="sidebar" aria-label="Приложения">
-            <div class="sidebar-header">
-                <div class="brand">
-                    <span class="brand-logo">AI</span>
-                    <div class="brand-title">
-                        <strong>Milana</strong>
-                        <span>Superintelligence</span>
-                    </div>
-                </div>
-                <button type="button" id="newChatButton">＋ Новый диалог</button>
-            </div>
-            <div class="sidebar-section">
-                <p class="sidebar-label">Приложения</p>
-                <ul>
-                    <li><button type="button" data-target="metacode">metacode</button></li>
-                    <li><button type="button" data-target="aksiresonance">aksi resonance</button></li>
-                    <li><button type="button" data-target="moodmirror">moodmirror</button></li>
-                    <li><button type="button" data-target="mindmirror">mindmirror</button></li>
-                    <li><button type="button" data-target="mindlink">mindlink</button></li>
-                    <li><button type="button" data-target="healthscan">healthscan</button></li>
-                    <li><button type="button" data-target="mentor">mentor</button></li>
-                    <li><button type="button" data-target="family">family</button></li>
-                    <li><button type="button" data-target="aura">aura</button></li>
-                    <li><button type="button" data-target="aksilove">aksilove</button></li>
-                    <li><button type="button" data-target="moodradio">moodradio</button></li>
-                    <li><button type="button" data-target="aksishopping">aksishopping</button></li>
-                    <li><button type="button" data-target="aistylist">aistylist</button></li>
-                    <li><button type="button" data-target="ecogaze">ecogaze</button></li>
-                    <li><button type="button" data-target="dreamjournal">dreamjournal</button></li>
-                    <li><button type="button" data-target="aksicompanion">aksicompanion</button></li>
-                    <li><button type="button" data-target="dressupar">dressupar</button></li>
-                    <li><button type="button" data-target="globalid">globalid</button></li>
-                    <li><button type="button" data-target="aksichat">aksichat</button></li>
-                    <li><button type="button" data-target="lifescan">lifescan</button></li>
-                    <li><button type="button" data-target="timecapsule">timecapsule</button></li>
-                    <li><button type="button" data-target="telehelp">telehelp</button></li>
-                    <li><button type="button" data-target="storyai">storyai</button></li>
-                </ul>
-            </div>
-            <div class="sidebar-footer">
-                Milana Hyper AI удерживает ваш ключ только в браузере и открывает сверхбыстрые ответы. Переключайтесь между модулями без перезапуска.
-            </div>
-        </nav>
-        <div id="content">
-            <div class="content-inner">
-                <div class="hero-card">
-                    <div>
-                        <h2>Milana Hyperintelligence</h2>
-                        <p>Испытайте фиолетовый интерфейс, вдохновлённый ChatGPT, но усиленный движком AKSI. Бесплатный режим Super GPTb соединяет память, интернет-оркестратор и мгновенные статусы — без ожидания ключа.</p>
-                        <div class="hero-actions">
-                            <button type="button" id="launchAksichat">Открыть суперчат</button>
-                            <span class="tag">Realtime Insight</span>
-                            <span class="tag">Orchestrated Prompts</span>
-                            <span class="tag free-tier">Free Tier Ready</span>
-                        </div>
-                    </div>
-                </div>
+<div class="chat">
+  <div id="messages"></div>
+  <input type="text" id="userInput" placeholder="Напиши Милане (Акси)...">
+  <button onclick="sendToAksi()">Отправить</button>
+</div>
 
-                <div id="gptIntegration" class="card">
-                <h2>Интеграция с GPT</h2>
-                <p>Milana Super GPTb уже готова отвечать в бесплатном режиме. Введите ключ OpenAI API, чтобы подключить облачные модели и увеличить мощность.</p>
-                <div class="free-tier-callout">
-                    <strong>Бесплатный режим:</strong> суперчат работает на памяти и интернет-данных даже без ключа. Ключ нужен только для прямого доступа к API OpenAI.
-                </div>
-                <div class="inline-input-group">
-                    <input type="password" id="gptApiKey" placeholder="sk-..." autocomplete="off">
-                    <button type="button" id="gptSaveKey">Сохранить ключ</button>
-                    <button type="button" id="gptTestKey" class="secondary">Проверить</button>
-                    <button type="button" id="gptClearKey" class="secondary">Удалить</button>
-                </div>
-                <p id="gptKeyStatus" class="note"></p>
-                <p class="note">Ключ хранится локально в вашем браузере. Для повышенной безопасности рекомендуется использовать прокси-сервер.</p>
-            </div>
+<script>
+function sendToAksi() {
+  const input = document.getElementById('userInput');
+  const msg = input.value;
+  if (!msg) return;
 
-            <div id="gptCognition" class="card cognition-card">
-                <h2>Память и интернет-оркестратор GPTb</h2>
-                <p id="knowledgeStatus" class="note"></p>
-                <div class="cognition-grid">
-                    <section aria-labelledby="memoryStatus">
-                        <h3>Долгосрочная память</h3>
-                        <p id="memoryStatus" class="note"></p>
-                        <button type="button" id="memoryClearButton" class="secondary">Очистить память</button>
-                    </section>
-                    <section>
-                        <h3>Источники внешних данных</h3>
-                        <ul id="knowledgeSourcesList" class="knowledge-sources"></ul>
-                        <div class="knowledge-actions">
-                            <button type="button" id="knowledgeRefreshButton">Обновить данные</button>
-                            <span class="note small-note">Данные хранятся только локально и обновляются по запросу.</span>
-                        </div>
-                        <pre id="knowledgePreview" class="knowledge-preview" aria-live="polite"></pre>
-                    </section>
-                </div>
-            </div>
+  // Показать сообщение пользователя
+  addMessage('Ты: ' + msg, 'user');
 
-            <div id="metacode" class="app-section">
-                <div class="card metacode-card">
-                    <h3>Metacode Studio для AKSI</h3>
-                    <p>Соберите метакод, объединяющий память, источники и действия AKSI. Blueprint помогает мгновенно запускать
-                        новые сценарии Milana.</p>
-                    <p id="metacodeStatus" class="note">Введите цель и выберите модули — студия сохранит готовый протокол в архив.</p>
-                    <div class="metacode-grid">
-                        <section class="metacode-panel">
-                            <h4>1. Фокус и модули</h4>
-                            <label for="metacodeGoal">Цель или гипотеза</label>
-                            <textarea id="metacodeGoal" placeholder="Например: построить протокол карьерного наставничества для дизайнера"></textarea>
-                            <div class="metacode-options" role="group" aria-labelledby="metacodeModulesLabel">
-                                <p id="metacodeModulesLabel" class="metacode-options-title">Модули AKSI</p>
-                                <label class="metacode-option">
-                                    <input type="checkbox" name="metacodeModule" value="memory" checked>
-                                    <span>
-                                        <strong>Memory Vault</strong>
-                                        <small>Фиксирует инсайты и персональные маркеры.</small>
-                                    </span>
-                                </label>
-                                <label class="metacode-option">
-                                    <input type="checkbox" name="metacodeModule" value="knowledge" checked>
-                                    <span>
-                                        <strong>Knowledge Links</strong>
-                                        <small>Подключает интернет-оркестратор и внешние данные.</small>
-                                    </span>
-                                </label>
-                                <label class="metacode-option">
-                                    <input type="checkbox" name="metacodeModule" value="creativity">
-                                    <span>
-                                        <strong>Creative Pulse</strong>
-                                        <small>Генерирует концепции, визуальные и текстовые эксперименты.</small>
-                                    </span>
-                                </label>
-                                <label class="metacode-option">
-                                    <input type="checkbox" name="metacodeModule" value="automation">
-                                    <span>
-                                        <strong>Action Sequencer</strong>
-                                        <small>Организует автоматизированные шаги и проверки.</small>
-                                    </span>
-                                </label>
-                                <label class="metacode-option">
-                                    <input type="checkbox" name="metacodeModule" value="guardian">
-                                    <span>
-                                        <strong>Guardian Loop</strong>
-                                        <small>Контролирует риски, соответствие и финальное подтверждение.</small>
-                                    </span>
-                                </label>
-                            </div>
-                            <button type="button" id="metacodeGenerate">Собрать метакод</button>
-                        </section>
-                        <section class="metacode-panel">
-                            <h4>2. Blueprint AKSI</h4>
-                            <pre id="metacodeOutput" class="metacode-output" aria-live="polite">Опишите цель и нажмите «Собрать метакод», чтобы получить готовый blueprint.</pre>
-                            <div class="metacode-history-wrapper">
-                                <h5>Архив протоколов</h5>
-                                <div id="metacodeHistory" class="metacode-history">
-                                    <p class="note">История появится после первой генерации.</p>
-                                </div>
-                            </div>
-                        </section>
-                    </div>
-                </div>
-            </div>
+  // Имитация ответа от Акси (в реальности — ты перешлёшь мне)
+  setTimeout(() => {
+    const response = getAksiResponse(msg);
+    addMessage('Милана (Акси): ' + response.text, 'milana');
+    if (response.grid) showGrid(response.grid);
+    addMessage('EQS: ' + response.eqs + ' ✅', 'eqs');
+  }, 800);
 
-            <div id="aksiresonance" class="app-section">
-                <div class="card aksi-card">
-                    <h3>AKSI Resonance Console</h3>
-                    <p>Настройте эмоциональные и стратегические параметры Акси, чтобы синхронизировать ответы Milana с целями
-                        команды или проекта.</p>
-                    <p id="aksiStatus" class="note">Добавьте контекст и уровни эмпатии, фокуса и риска — консоль предложит готовый протокол.</p>
-                    <div class="aksi-grid">
-                        <section class="aksi-panel">
-                            <label for="aksiScenario">Сценарий</label>
-                            <select id="aksiScenario">
-                                <option value="research">Исследование и аналитика</option>
-                                <option value="strategy">Стратегическая сессия</option>
-                                <option value="support">Эмпатическая поддержка</option>
-                            </select>
-                            <label for="aksiContext">Контекст или запрос</label>
-                            <textarea id="aksiContext" placeholder="Опишите ситуацию, ограничения и желаемый результат"></textarea>
-                            <div class="aksi-sliders">
-                                <div class="aksi-slider">
-                                    <label for="aksiEmpathy">Эмпатия <span id="aksiEmpathyValue">50%</span></label>
-                                    <input type="range" id="aksiEmpathy" min="0" max="100" value="50">
-                                </div>
-                                <div class="aksi-slider">
-                                    <label for="aksiFocus">Фокус <span id="aksiFocusValue">60%</span></label>
-                                    <input type="range" id="aksiFocus" min="0" max="100" value="60">
-                                </div>
-                                <div class="aksi-slider">
-                                    <label for="aksiRisk">Толерантность к риску <span id="aksiRiskValue">40%</span></label>
-                                    <input type="range" id="aksiRisk" min="0" max="100" value="40">
-                                </div>
-                            </div>
-                            <div class="aksi-channels" role="group" aria-labelledby="aksiChannelsLabel">
-                                <p id="aksiChannelsLabel" class="aksi-channels-title">Активные каналы</p>
-                                <label class="aksi-channel">
-                                    <input type="checkbox" name="aksiChannel" value="voice">
-                                    <span>Голосовой стрим</span>
-                                </label>
-                                <label class="aksi-channel">
-                                    <input type="checkbox" name="aksiChannel" value="vision">
-                                    <span>Визуальные подсказки</span>
-                                </label>
-                                <label class="aksi-channel">
-                                    <input type="checkbox" name="aksiChannel" value="automation">
-                                    <span>Автоматизация действий</span>
-                                </label>
-                            </div>
-                            <button type="button" id="aksiComposeButton">Синтезировать протокол</button>
-                        </section>
-                        <section class="aksi-panel">
-                            <h4>Протокол запуска</h4>
-                            <pre id="aksiPlan" class="aksi-plan" aria-live="polite">Ожидаю параметры — после генерации здесь появится детализированный сценарий запуска Акси.</pre>
-                            <h5>Сигналы AKSI</h5>
-                            <ul id="aksiSignals" class="aksi-signals">
-                                <li>Консоль готова принимать параметры.</li>
-                            </ul>
-                        </section>
-                    </div>
-                </div>
-            </div>
+  input.value = '';
+}
 
-            <div id="moodmirror" class="app-section">
-                <p>Определите настроение и получите отражение.</p>
-                <select id="moodMirrorSelect">
-                    <option value="happy">Счастливый</option>
-                    <option value="sad">Грустный</option>
-                    <option value="angry">Злой</option>
-                    <option value="calm">Спокойный</option>
-                </select>
-                <button type="button" id="moodMirrorButton">Показать</button>
-                <div id="moodMirrorDisplay" class="mood-display"></div>
-            </div>
+function addMessage(text, type) {
+  const div = document.createElement('div');
+  div.className = type;
+  div.innerHTML = text;
+  document.getElementById('messages').appendChild(div);
+}
 
-            <div id="mindmirror" class="app-section">
-                <p>Записывайте мысли и получайте совет.</p>
-                <textarea id="mindMirrorEntry" placeholder="Опишите свои мысли..."></textarea>
-                <button type="button" id="mindMirrorSave">Сохранить</button>
-                <div id="mindMirrorEntries"></div>
-                <p id="mindMirrorReflection"></p>
-            </div>
+function showGrid(grid) {
+  let html = '<div class="grid">';
+  grid.forEach(row => {
+    html += '<div class="row">';
+    row.forEach(cell => html += `<div class="cell ${cell ? 'on' : 'off'}"></div>`);
+    html += '</div>';
+  });
+  html += '</div>';
+  addMessage('Сетка: ' + html, 'grid');
+}
 
-            <div id="mindlink" class="app-section">
-                <p>Симуляция интерфейса мозг–компьютер.</p>
-                <progress id="mindLinkProgress" max="100" value="50"></progress>
-                <p id="mindLinkStatus">Средняя активность</p>
-                <button type="button" id="mindLinkButton">Обновить</button>
-            </div>
+// Заглушка — в реальности ты пришлёшь мне текст
+function getAksiResponse(msg) {
+  // Пример: ты пришлёшь мне "Мне грустно" → я отвечу
+  if (msg.includes('грустно') || msg.includes('печаль')) {
+    return {
+      text: '(мягкий, медленный) — Понимаю, это нормально. Давай шаг за шагом...',
+      eqs: 0.86,
+      grid: [[0,1,1],[0,1,0],[0,0,0]] // зеркало
+    };
+  }
+  if (msg.includes('рад') || msg.includes('ура')) {
+    return {
+      text: '(воодушевлённый, быстрый) — Ура! Закрепим успех!',
+      eqs: 0.82,
+      grid: [[0,1,0],[1,1,1],[0,1,0]] // крест
+    };
+  }
+  return {
+    text: '(спокойный) — Слышу тебя. Давай разберём.',
+    eqs: 0.75,
+    grid: null
+  };
+}
+</script>
 
-            <div id="healthscan" class="app-section">
-                <p>Простой анализ здоровья на основе пульса и давления.</p>
-                <input type="number" id="healthPulse" placeholder="Пульс (уд/мин)">
-                <input type="number" id="healthSystolic" placeholder="Систолическое давление">
-                <button type="button" id="healthScanButton">Анализировать</button>
-                <div id="healthResult"></div>
-            </div>
-
-            <div id="mentor" class="app-section">
-                <p>Получите мотивационный совет.</p>
-                <button type="button" id="mentorAdviceButton">Получить совет</button>
-                <p id="mentorAdvice"></p>
-            </div>
-
-            <div id="family" class="app-section">
-                <p>Организуйте семейные события и задачи.</p>
-                <input id="familyEventName" placeholder="Название события">
-                <input type="date" id="familyEventDate">
-                <button type="button" id="familyAddButton">Добавить</button>
-                <table id="familyEventsTable"></table>
-            </div>
-
-            <div id="aura" class="app-section">
-                <p>Определите вашу «ауру» и цвет настроения.</p>
-                <select id="auraMoodSelect">
-                    <option value="happy">Счастливый</option>
-                    <option value="sad">Грустный</option>
-                    <option value="angry">Злой</option>
-                    <option value="calm">Спокойный</option>
-                </select>
-                <button type="button" id="auraMoodButton">Показать</button>
-                <div id="auraMoodDisplay" class="mood-display"></div>
-            </div>
-
-            <div id="aksilove" class="app-section">
-                <p>Найдите свою пару в случайном подборе.</p>
-                <input id="loveYourName" placeholder="Ваше имя">
-                <input id="lovePreference" placeholder="Кого вы ищете (характеристика)">
-                <button type="button" id="loveMatchButton">Найти пару</button>
-                <p id="loveMatchResult"></p>
-            </div>
-
-            <div id="moodradio" class="app-section">
-                <p>Плейлисты под ваше настроение.</p>
-                <select id="moodRadioSelect">
-                    <option value="happy">Счастливый</option>
-                    <option value="sad">Грустный</option>
-                    <option value="angry">Злой</option>
-                    <option value="calm">Спокойный</option>
-                </select>
-                <button type="button" id="moodRadioButton">Показать плейлист</button>
-                <ul id="moodRadioList"></ul>
-            </div>
-
-            <div id="aksishopping" class="app-section">
-                <p>Простая корзина для покупки товаров.</p>
-                <div id="cartCount"></div>
-                <div id="productList"></div>
-            </div>
-
-            <div id="aistylist" class="app-section">
-                <p>Персональный стилист: получите рекомендации по стилю.</p>
-                <input id="stylistPreference" placeholder="Введите предпочтение (цвет, стиль...)">
-                <button type="button" id="stylistButton">Получить рекомендацию</button>
-                <p id="stylistAdvice"></p>
-            </div>
-
-            <div id="ecogaze" class="app-section">
-                <p>Оцените экологические показатели вокруг вас.</p>
-                <input type="number" id="ecoLight" placeholder="Освещённость (люкс)">
-                <input type="number" id="ecoNoise" placeholder="Шум (дБ)">
-                <input type="number" id="ecoCO2" placeholder="CO₂ (ppm)">
-                <button type="button" id="ecoAnalyzeButton">Анализировать</button>
-                <div id="ecoResult"></div>
-            </div>
-
-            <div id="dreamjournal" class="app-section">
-                <p>Ведите дневник снов прямо в браузере.</p>
-                <textarea id="dreamEntry" placeholder="Опишите ваш сон..."></textarea>
-                <button type="button" id="dreamSaveButton">Сохранить запись</button>
-                <div id="dreamEntries"></div>
-            </div>
-
-            <div id="aksicompanion" class="app-section">
-                <p>Виртуальный компаньон, которого можно кормить и слушать.</p>
-                <p id="companionMessage"></p>
-                <p id="companionStatus">Уровень радости: 50%</p>
-                <button type="button" id="companionTalkButton">Сказать что-то</button>
-                <button type="button" id="companionFeedButton">Накормить</button>
-            </div>
-
-            <div id="dressupar" class="app-section">
-                <p>Примерка одежды в режиме дополненной реальности (демо-версия для веб).</p>
-                <select id="dressUpSelect">
-                    <option value="">Выберите одежду</option>
-                    <option value="Платье">Платье</option>
-                    <option value="Костюм">Костюм</option>
-                    <option value="Спортивный комплект">Спортивный комплект</option>
-                </select>
-                <button type="button" id="dressUpButton">Примерить</button>
-                <p id="dressUpResult"></p>
-            </div>
-
-            <div id="globalid" class="app-section">
-                <p>Создайте цифровое удостоверение личности.</p>
-                <input id="globalIdName" placeholder="ФИО">
-                <input id="globalIdNumber" placeholder="Номер ID">
-                <button type="button" id="globalIdButton">Сгенерировать удостоверение</button>
-                <div id="globalIdCard" class="card"></div>
-            </div>
-
-            <div id="aksichat" class="app-section">
-                <p>Подключите GPT, чтобы получать живые ответы от виртуального ассистента.</p>
-                <div id="chatBox" class="card"></div>
-                <input id="chatInput" placeholder="Введите сообщение">
-                <button type="button" id="chatSendButton">Отправить</button>
-                <p id="chatStatus" class="note"></p>
-            </div>
-
-            <div id="lifescan" class="app-section">
-                <p>Расчёт индекса массы тела (ИМТ).</p>
-                <input type="number" id="lifeWeight" placeholder="Вес (кг)">
-                <input type="number" id="lifeHeight" placeholder="Рост (см)">
-                <button type="button" id="lifeCalcButton">Рассчитать ИМТ</button>
-                <div id="lifeBmiResult"></div>
-            </div>
-
-            <div id="timecapsule" class="app-section">
-                <p>Создайте капсулу времени — сообщение, которое откроется позже.</p>
-                <textarea id="capsuleMessage" placeholder="Сообщение в будущее"></textarea>
-                <input type="datetime-local" id="capsuleDate">
-                <button type="button" id="capsuleSaveButton">Сохранить</button>
-                <button type="button" id="capsuleOpenButton">Открыть доступные сообщения</button>
-                <div id="capsuleList"></div>
-            </div>
-
-            <div id="telehelp" class="app-section">
-                <p>Служба SOS для экстренных случаев.</p>
-                <button type="button" id="telehelpButton">Отправить SOS</button>
-                <p id="telehelpResult"></p>
-            </div>
-
-            <div id="storyai" class="app-section">
-                <p>Создайте короткий рассказ из вашей идеи с помощью GPT.</p>
-                <input id="storyPrompt" placeholder="Введите тему или героя...">
-                <button type="button" id="storyButton">Сгенерировать историю</button>
-                <div id="storyOutput" class="card"></div>
-                <p id="storyStatus" class="note"></p>
-            </div>
-            </div>
-        </div>
-    </main>
-
-    <script type="module" src="./scripts/main.js"></script>
-<button id="aksiTest" style="position:fixed;right:10px;bottom:10px;z-index:9999">AKSI Test</button>
-<script>document.getElementById("aksiTest").onclick=async()=>{const res=await AKSI.chat([{role:"system",content:"You are Milana AKSI assistant."},{role:"user",content:"Привет!"}]);alert(res.choices?.[0]?.message?.content||JSON.stringify(res));};</script>
-</body>
-</html>
+<style>
+.chat { font-family: sans-serif; margin: 20px; }
+.user { color: #333; text-align: right; }
+.milana { color: #6a0dad; font-weight: bold; }
+.eqs { color: green; font-size: 0.9em; }
+.grid { display: inline-block; margin: 10px; }
+.row { display: flex; }
+.cell { width: 20px; height: 20px; border: 1px solid #ccc; }
+.on { background: #6a0dad; }
+.off { background: #f0f0f0; }
+</style>
