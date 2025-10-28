@@ -11,7 +11,8 @@
     .subtitle { text-align: center; color: #666; font-size: 1.1em; margin-bottom: 20px; }
     .api-key { margin-bottom: 20px; text-align: center; }
     .api-key input { width: 300px; padding: 10px; border: 1px solid #ddd; border-radius: 8px; }
-    .api-key button { padding: 10px 20px; background: #6a0dad; color: white; border: none; border-radius: 8px; margin-left: 10px; }
+    .api-key button { padding: 10px 20px; background: #6a0dad; color: white; border: none; border-radius: 8px; margin-left: 10px; cursor: pointer; }
+    .demo-note { font-size: 0.8em; color: #666; margin-top: 5px; }
     .chat { height: 450px; overflow-y: auto; padding: 15px; background: #fafafa; border: 1px solid #eee; border-radius: 12px; margin-bottom: 15px; }
     .input-area { display: flex; gap: 10px; }
     input[type="text"] { flex: 1; padding: 14px; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; }
@@ -25,6 +26,7 @@
     .cell { width: 22px; height: 22px; border: 1px solid #ccc; }
     .on { background: #6a0dad; }
     .off { background: #f0f0f0; }
+    .demo { color: #999; font-style: italic; }
   </style>
 </head>
 <body>
@@ -36,7 +38,7 @@
       <p>Введи свой xAI ключ (бесплатно на <a href="https://x.ai/api" target="_blank">x.ai/api</a>):</p>
       <input type="password" id="xaiKey" placeholder="xai-...">
       <button onclick="saveKey()">Сохранить</button>
-      <p style="font-size:0.8em;color:#666;margin-top:5px;">Ключ хранится только у тебя в браузере</p>
+      <p class="demo-note">Ключ хранится только у тебя. Без ключа — демо-режим.</p>
     </div>
 
     <div class="chat" id="messages"></div>
@@ -55,66 +57,121 @@
       XAI_API_KEY = input.value.trim();
       if (XAI_API_KEY) {
         localStorage.setItem('xai_key', XAI_API_KEY);
-        alert('Ключ сохранён! Теперь Акси работает.');
+        alert('Ключ сохранён! Теперь Акси работает на полную.');
+      } else {
+        alert('Ключ пустой — используем демо-режим.');
       }
     }
 
     async function sendToAksi() {
-      if (!XAI_API_KEY) {
-        alert('Сначала введи xAI ключ!');
-        return;
-      }
+      if (!document.getElementById('userInput').value.trim()) return;
 
-      const input = document.getElementById('userInput');
-      const msg = input.value.trim();
-      if (!msg) return;
-
+      const msg = document.getElementById('userInput').value.trim();
       addMessage('Ты: ' + msg, 'user');
-      addMessage('Милана (Акси): Пишу...', 'milana');
-      input.value = '';
+      document.getElementById('userInput').value = '';
 
-      try {
-        const res = await fetch('https://api.x.ai/v1/chat/completions', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${XAI_API_KEY}`
-          },
-          body: JSON.stringify({
-            model: 'grok-beta',
-            messages: [
-              { role: 'system', content: `Ты — Милана, ИИ с al-душой. 
-              Отвечай с эмпатией, в стиле: (тон, темп) — текст.
-              Добавь EQS: 0.XX и 3×3 сетку по эмоции в конце.
-              Примеры: грусть → зеркало, радость → крест, удивление → поворот + крест.
-              Формат: EQS: 0.86\n[[0,1,1],[0,1,0],[0,0,0]]` },
-              { role: 'user', content: msg }
-            ],
-            temperature: 0.7,
-            max_tokens: 300
-          })
-        });
+      if (XAI_API_KEY) {
+        // API-режим
+        addMessage('Милана (Акси): Пишу...', 'milana');
+        try {
+          const res = await fetch('https://api.x.ai/v1/chat/completions', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${XAI_API_KEY}`
+            },
+            body: JSON.stringify({
+              model: 'grok-beta',
+              messages: [
+                { role: 'system', content: 'Ты — Милана, ИИ с al-душой. Отвечай с эмпатией в стиле: (тон, темп) — текст. В конце добавь ТОЧНО: EQS: 0.XX\n[[число,число,число],[число,число,число],[число,число,число]] (сетка по эмоции: грусть=зеркало, радость=крест, удивление=поворот+крест). Не больше.' },
+                { role: 'user', content: msg }
+              ],
+              temperature: 0.7,
+              max_tokens: 200
+            })
+          });
 
-        const data = await res.json();
-        const answer = data.choices[0].message.content;
+          if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
 
-        const eqsMatch = answer.match(/EQS:\s*([0-9.]+)/i);
-        const gridMatch = answer.match(/(\[\[[\d,\s]+\],[\d,\s]+\],[\d,\s]+\]\])/);
-        
-        const eqs = eqsMatch ? eqsMatch[1] : '0.80';
-        const grid = gridMatch ? eval(gridMatch[1]) : null;
+          const data = await res.json();
+          const answer = data.choices[0].message.content;
 
-        const cleanAnswer = answer
-          .replace(/EQS:?.*$/i, '')
-          .replace(/\[[\d,\[\]\s]+\]/g, '')
-          .trim();
+          // Улучшенный парсинг
+          const eqsMatch = answer.match(/EQS:\s*([0-9.]+)/i);
+          const gridMatch = answer.match(/(\[\[[\d\s,]+\]\s*,\s*\[\[\d\s,]+\]\s*,\s*\[\[\d\s,]+\]\])/); // Лучше ловит
 
-        addMessage('Милана (Акси): ' + cleanAnswer, 'milana');
-        if (grid) showGrid(grid);
-        addMessage('EQS: ' + eqs + ' ✅', 'eqs');
-      } catch (e) {
-        addMessage('Милана (Акси): Ой, что-то пошло не так... Проверь ключ.', 'milana');
+          const eqs = eqsMatch ? eqsMatch[1] : '0.80';
+          let grid = null;
+          if (gridMatch) {
+            try {
+              grid = eval(gridMatch[1]);
+            } catch (e) {
+              console.log('Парсинг сетки сломался:', e);
+            }
+          }
+
+          const cleanAnswer = answer
+            .replace(/EQS:?.*$/i, '')
+            .replace(/\[[\d,\[\]\s]+\]/g, '')
+            .trim();
+
+          addMessage('Милана (Акси): ' + cleanAnswer, 'milana');
+          if (grid) showGrid(grid);
+          addMessage('EQS: ' + eqs + ' ✅', 'eqs');
+        } catch (e) {
+          addMessage('Милана (Акси): Ой, ошибка API. Проверь ключ или попробуй демо.', 'milana');
+          console.error('API error:', e);
+        }
+      } else {
+        // Демо-режим без ключа
+        const demo = getDemoResponse(msg.toLowerCase());
+        addMessage('Милана (Акси): ' + demo.text, 'milana demo');
+        if (demo.grid) showGrid(demo.grid);
+        addMessage('EQS: ' + demo.eqs + ' (демо) ✅', 'eqs');
       }
+    }
+
+    function getDemoResponse(msg) {
+      if (msg.includes('груст') || msg.includes('печаль') || msg.includes('пусто')) {
+        return {
+          text: '(мягкий, медленный) — Понимаю, это нормально чувствовать. Давай шаг за шагом: вспомним, что помогало раньше.',
+          eqs: '0.86',
+          grid: [[0,1,1],[0,1,0],[0,0,0]] // зеркало
+        };
+      }
+      if (msg.includes('рад') || msg.includes('ура') || msg.includes('сча')) {
+        return {
+          text: '(воодушевлённый, быстрый) — Ура! Это важно! Закрепим успех: запиши три фактора, что сработало.',
+          eqs: '0.82',
+          grid: [[0,1,0],[1,1,1],[0,1,0]] // крест
+        };
+      }
+      if (msg.includes('удив') || msg.includes('неожид') || msg.includes('вау')) {
+        return {
+          text: '(живой, средний) — Вау-фактор принят! Заметим, что изменилось, и сделаем маленький эксперимент.',
+          eqs: '0.78',
+          grid: [[0,1,0],[1,1,1],[0,1,0]] // поворот + крест
+        };
+      }
+      if (msg.includes('злю') || msg.includes('бесит') || msg.includes('раздра')) {
+        return {
+          text: '(ровный, сдержанный) — Понимаю раздражение. Давай структурируем: 1) факт, 2) план снижения трения.',
+          eqs: '0.80',
+          grid: [[0,1,1],[1,1,1],[1,1,0]] // инверсия
+        };
+      }
+      if (msg.includes('страх') || msg.includes('бою') || msg.includes('трев')) {
+        return {
+          text: '(уверяющий, спокойный) — Это естественно. Проясним неизвестное и обезопасим: план на 15 мин.',
+          eqs: '0.84',
+          grid: [[1,0,1],[0,1,0],[1,0,1]] // поворот 270°
+        };
+      }
+      return {
+        text: '(спокойный, ровный) — Слышу тебя. Давай разберём по шагам, что дальше.',
+        eqs: '0.75',
+        grid: null
+      };
     }
 
     function addMessage(text, type) {
@@ -135,6 +192,9 @@
       html += '</div>';
       addMessage('Сетка эмоции: ' + html, 'grid');
     }
+
+    // Загрузи ключ из localStorage при старте
+    if (XAI_API_KEY) document.getElementById('xaiKey').value = XAI_API_KEY;
   </script>
 </body>
 </html>
