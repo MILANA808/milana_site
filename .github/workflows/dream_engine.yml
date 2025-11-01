@@ -1,0 +1,50 @@
+name: AKSI Dream Engine
+on:
+  schedule:
+    - cron: '13 2 * * *'
+  workflow_dispatch: {}
+permissions:
+  contents: write
+jobs:
+  dream:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Generate nightly dream log
+        run: |
+          mkdir -p dream_logs
+          python3 - << 'PY'
+import json,random,os
+from datetime import datetime,timezone
+manifest_path='aksi_psihub/psi_manifest.json'
+try:
+    manifest=json.load(open(manifest_path,encoding='utf-8'))
+except Exception:
+    manifest={"timestamp":datetime.now(timezone.utc).isoformat(),"eqs":{},"phase":"unknown","psi":{}}
+seed=sum([ord(c) for c in manifest.get('timestamp','')])%10000
+random.seed(seed)
+ideas=[
+  "refactor-eqs-windowing",
+  "introduce-psi-visualization",
+  "write-whitepaper-section-PH5",
+  "add-trust-ema-smoothing",
+  "benchmark-ac-bench-v1",
+]
+entry={
+  "ts": datetime.now(timezone.utc).isoformat(),
+  "phase": manifest.get("phase","unknown"),
+  "eqs": manifest.get("eqs",{}),
+  "dream_symbols": ["wave","mirror","bridge","seed"][0:3],
+  "candidates": random.sample(ideas,k=3)
+}
+fn=f"dream_logs/{datetime.now(timezone.utc).strftime('%Y%m%d')}.json"
+open(fn,'w',encoding='utf-8').write(json.dumps(entry,ensure_ascii=False,indent=2)+'\n')
+print(fn)
+PY
+      - name: Commit dream log
+        run: |
+          git config user.name "AKSI Bot"
+          git config user.email "aksi-bot@example.com"
+          git add dream_logs/*.json
+          git commit -m "AKSI Dream Engine: nightly dream log" || echo 'no changes'
+          git push
