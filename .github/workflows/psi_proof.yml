@@ -1,0 +1,45 @@
+name: AKSI ψ-proof
+on:
+  schedule:
+    - cron: '0 */6 * * *'
+  workflow_dispatch: {}
+permissions:
+  contents: write
+  id-token: write
+jobs:
+  proof:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Generate Keys
+        run: |
+          mkdir -p aksi_psihub
+          cd aksi_psihub
+          test -f ed25519_sk || ssh-keygen -t ed25519 -f ed25519_sk -N ''
+      - name: Build ψ-manifest and sign
+        run: |
+          cd aksi_psihub
+          python3 - << 'PY'
+import json,hashlib,os,time
+from datetime import datetime,timezone
+manifest={"timestamp":datetime.now(timezone.utc).isoformat(),"eqs":{"valence":0.72,"arousal":0.44,"trust_ema":0.92,"initiative":0.67},"phase":"PH5_reflection","psi":{"w":[0.18,0.12,0.2,0.15,0.1,0.15,0.1],"phi_basis":"custom_AKSI"}}
+raw=json.dumps(manifest,ensure_ascii=False,sort_keys=True)
+open('psi_manifest.json','w',encoding='utf-8').write(raw+'
+')
+hash_hex=hashlib.sha256(raw.encode('utf-8')).hexdigest()
+open('hash.txt','w').write(hash_hex+'
+')
+PY
+      - name: Sign hash (Ed25519)
+        run: |
+          cd aksi_psihub
+          (which ssh-keygen >/dev/null 2>&1)
+          ssh-keygen -Y sign -n file -f ed25519_sk hash.txt
+          echo "$(date -u +%FT%TZ)	$GITHUB_SHA	$(cat hash.txt)	$(base64 -w0 < hash.txt.sig)" >> proof_log.tsv
+      - name: Commit artifacts
+        run: |
+          git config user.name "AKSI Bot"
+          git config user.email "aksi-bot@example.com"
+          git add aksi_psihub/*
+          git commit -m "AKSI ψ-proof: periodic signed manifest" || echo 'no changes'
+          git push
