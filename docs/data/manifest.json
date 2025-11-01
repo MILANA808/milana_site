@@ -1,0 +1,16 @@
+{
+  "timestamp": "${{ github.event.head_commit.timestamp || '' }}",
+  "eqs": {
+    "valence": 0.73,
+    "arousal": 0.41,
+    "trust_ema": 0.91,
+    "initiative": 0.66
+  },
+  "phase": "PH4_regulation",
+  "psi": {
+    "w": [0.18, 0.12, 0.2, 0.15, 0.1, 0.15, 0.1],
+    "phi_basis": "custom_AKSI"
+  },
+  "hash_alg": "SHA-256",
+  "sig_alg": "Ed25519"
+}
