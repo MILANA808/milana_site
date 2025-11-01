@@ -1,5 +1,7 @@
 name: AKSI ψ-proof
 on:
+  push:
+    branches: [ main ]
   schedule:
     - cron: '0 */6 * * *'
   workflow_dispatch: {}
@@ -41,5 +43,5 @@ PY
           git config user.name "AKSI Bot"
           git config user.email "aksi-bot@example.com"
           git add aksi_psihub/*
-          git commit -m "AKSI ψ-proof: periodic signed manifest" || echo 'no changes'
+          git commit -m "AKSI ψ-proof: periodic signed manifest (push-trigger)" || echo 'no changes'
           git push
